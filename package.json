@@ -7,15 +7,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jonnymortemore/odin-project-webpack-template.git"
+    "url": "git+https://github.com/jonnymortemore/odin-project-battleship.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jonnymortemore/odin-project-webpack-template/issues"
+    "url": "https://github.com/jonnymortemore/odin-project-battleship/issues"
   },
-  "homepage": "https://github.com/jonnymortemore/odin-project-webpack-template#readme",
+  "homepage": "https://github.com/jonnymortemore/odin-project-battleship#readme",
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.39.0",
