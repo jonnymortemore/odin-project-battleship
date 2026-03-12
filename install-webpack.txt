@@ -1,0 +1,25 @@
+Make sure you first created a NPM package.json by using:
+
+npm init -y
+
+Then install webpack:
+
+npm install --save-dev webpack webpack-cli
+
+To handle HTML files:
+
+npm install --save-dev html-webpack-plugin
+
+To handle CSS files:
+
+npm install --save-dev style-loader css-loader
+
+To handle Images in HTML:
+
+npm install --save-dev html-loader
+
+View bundled webpack server immediately:
+
+npm install --save-dev webpack-dev-server
+
+To run this use: npx webpack serve
