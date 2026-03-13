@@ -41,6 +41,12 @@ export class Gameboard {
     constructor(size) {
         this.boardsize = size;
         this.gameboard = this.createboard(this.boardsize);
+        this.states = {
+            undetected: 1,
+            miss: -1,
+            empty: 0,
+            hit: 2
+        }
     }
 
     get boardsize() {
@@ -60,29 +66,36 @@ export class Gameboard {
     }
 
     createboard(size) {
+        //can't use .fill to fill a array with objects!
         const boardArray = Array.from({ length: size }, () =>
-            Array(size).fill(new BoardSquare()),
+            Array.from({ length: size }, () => new BoardSquare())
         );
         return boardArray;
     }
+
+    addShip(ship, x, y, angle) {
+        let extraX = 0;
+        let extraY = 0;
+
+        switch (angle) {
+            case 0:   extraX = 1; break;
+            case 180: extraX = -1; break;
+            case 90:  extraY = 1; break;
+            case 270: extraY = -1; break;
+        }
+
+        for(let i = 0; i < ship.size; i++) {
+            const bg = this.gameboard[x + (extraX * i)][y + (extraY * i)]
+            bg.ship = ship
+            bg.state = this.states.undetected
+        }
+    }
+   
 }
 
 class BoardSquare {
-    constructor(ship = null, state = "empty") {
+    constructor(ship = null, state = 0) {
         this.ship = ship;
         this.state = state;
-    }
-
-    get state() {
-        return this._state;
-    }
-
-    set state(state) {
-        const STATES = ["empty", "hit", "miss"];
-        if (STATES.includes(state)) {
-            this._state = state;
-        } else {
-            throw new TypeError("incorrect board square state");
-        }
     }
 }

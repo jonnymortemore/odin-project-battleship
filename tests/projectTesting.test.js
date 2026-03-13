@@ -51,9 +51,31 @@ test("create gameboard correct in gameboard object", () => {
     expect(new Gameboard(10).gameboard[0].length).toBe(10);
     //check all the array values are 0
     //.flat creates a linear array removing all sub arrays to make sure every checks all indexes
+    const newGameboard = new Gameboard(10);
     expect(
-        new Gameboard(10).gameboard
+        newGameboard.gameboard
             .flat()
-            .every((gridsquare) => gridsquare.state === "empty"),
+            .every(
+                (gridsquare) => gridsquare.state === newGameboard.states.empty,
+            ),
     ).toBe(true);
+});
+
+test("adding ship to gameboard", () => {
+    const newGameboard = new Gameboard(10);
+    newGameboard.addShip(new Ship(3), 1, 1, 0);
+    expect(newGameboard.gameboard[1][1].state).toBe(
+        newGameboard.states.undetected,
+    );
+    expect(newGameboard.gameboard[2][1].state).toBe(
+        newGameboard.states.undetected,
+    );
+    expect(newGameboard.gameboard[3][1].state).toBe(
+        newGameboard.states.undetected,
+    );
+    expect(newGameboard.gameboard[4][1].state).toBe(newGameboard.states.empty);
+    expect(newGameboard.gameboard[5][1].state).toBe(newGameboard.states.empty);
+    expect(newGameboard.gameboard[0][1].state).toBe(newGameboard.states.empty);
+    expect(newGameboard.gameboard[0][0].state).toBe(newGameboard.states.empty);
+    expect(newGameboard.gameboard[1][0].state).toBe(newGameboard.states.empty);
 });
