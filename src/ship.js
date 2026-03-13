@@ -90,6 +90,70 @@ export class Gameboard {
             bg.state = this.states.undetected
         }
     }
+
+    setupShipStartingPositions() {
+        const presetShips = [
+            { name: "Carrier", size: 5 },
+            { name: "Battleship", size: 4 },
+            { name: "Cruiser", size: 3 },
+            { name: "Submarine", size: 3 },
+            { name: "Destroyer", size: 2 }
+        ];
+
+        //setup random ship positions
+        for (const shipDetails of presetShips) {
+            const ship = new Ship(shipDetails.size, shipDetails.name)
+
+            while (true) {
+                //randomly pick an angle
+                const angle = (() => {
+                    const angles = [0, 90, 180, 270]
+                    const randomIndex = Math.floor(Math.random() * angles.length)
+                    return angles[randomIndex]
+                })()
+
+                //randomly pick X and Y 
+                const x = Math.floor(Math.random() * this.boardsize)
+                const y = Math.floor(Math.random() * this.boardsize)
+
+                //check X and Y (with ship length) isn't out of bounds or overlapping any other ship - if position found break out of while loop
+                if(this.#shipFits(ship, x, y, angle)) {
+                    this.addShip(ship, x, y, angle)
+                    break
+                }
+
+                
+            }
+        }
+
+        console.table(this.gameboard)
+    }
+
+    #shipFits(ship, x, y, angle) {
+        let extraX = 0;
+        let extraY = 0;
+       
+        switch (angle) {
+            case 0:   extraX = 1; break;
+            case 180: extraX = -1; break;
+            case 90:  extraY = 1; break;
+            case 270: extraY = -1; break;
+        }
+
+        for(let i = 0; i < ship.size; i++) {
+            const newX = x + (extraX * i)
+            const newY = y + (extraY * i)
+
+            if (newX >= this.boardsize || newX < 0 || newY >= this.boardsize || newY < 0) {
+                return false
+            }
+            if (this.gameboard[newX][newY].state !== this.states.empty) {
+                return false
+            }
+        }
+
+        return true
+    }
    
 }
 

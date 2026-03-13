@@ -79,3 +79,8 @@ test("adding ship to gameboard", () => {
     expect(newGameboard.gameboard[0][0].state).toBe(newGameboard.states.empty);
     expect(newGameboard.gameboard[1][0].state).toBe(newGameboard.states.empty);
 });
+
+test("randomly placing ships", () => {
+    const newGameboard = new Gameboard(10);
+    newGameboard.setupShipStartingPositions()
+})
