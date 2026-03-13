@@ -1,4 +1,4 @@
-import { Ship, Gameboard} from "../src/ship.js";
+import { Ship, Gameboard } from "../src/ship.js";
 
 test("ship class exists", () => {
     expect(typeof new Ship()).toBe("object");
@@ -12,9 +12,9 @@ test("ship sized correctly", () => {
 });
 
 test("ship named correctly", () => {
-    expect(new Ship(5).shipName).toBe("ship")
-    expect(new Ship(5, "boat").shipName).toBe("boat")
-})
+    expect(new Ship(5).shipName).toBe("ship");
+    expect(new Ship(5, "boat").shipName).toBe("boat");
+});
 
 test("ships should take hits", () => {
     const ship = new Ship(4);
@@ -25,22 +25,22 @@ test("ships should take hits", () => {
 
 test("ships can sink", () => {
     const ship = new Ship(3);
-    expect(ship.sunk).toBe(false)
+    expect(ship.sunk).toBe(false);
     //direct ship sinking
     ship.sinkShip();
     expect(ship.sunk).toBe(true);
     //ship sinking using hit
     const newShip = new Ship(2);
-    newShip.hit()
-    newShip.hit()
-    expect(ship.sunk).toBe(true)
-})
+    newShip.hit();
+    newShip.hit();
+    expect(ship.sunk).toBe(true);
+});
 
 //test gameboard
 test("create gameboard object", () => {
-    expect(typeof new Gameboard(5)).toBe("object")
-    expect(new Gameboard(5).boardsize).toBe(5)
-})
+    expect(typeof new Gameboard(5)).toBe("object");
+    expect(new Gameboard(5).boardsize).toBe(5);
+});
 
 test("create gameboard correct in gameboard object", () => {
     expect(typeof new Gameboard(5).gameboard).toBe("object");
@@ -51,6 +51,9 @@ test("create gameboard correct in gameboard object", () => {
     expect(new Gameboard(10).gameboard[0].length).toBe(10);
     //check all the array values are 0
     //.flat creates a linear array removing all sub arrays to make sure every checks all indexes
-    expect(new Gameboard(10).gameboard.flat().every((gridsquare) => gridsquare.state === "empty")).toBe(true)
-
-})
+    expect(
+        new Gameboard(10).gameboard
+            .flat()
+            .every((gridsquare) => gridsquare.state === "empty"),
+    ).toBe(true);
+});
