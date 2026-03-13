@@ -60,9 +60,39 @@ export class Gameboard {
 
     createboard(size) {
         const boardArray = Array.from({ length: size }, () =>
-        Array(size).fill(0)
+        Array(size).fill(new BoardSquare)
         );
         return boardArray
 
     }
+
+    
+
+}
+
+class BoardSquare {
+    constructor(ship = null, state = "empty") {
+        this.ship = ship
+        this.state = state
+        
+    }
+
+    get state() {
+        return this._state
+    }
+
+    set state(state) {
+        const STATES = [
+            "empty",
+            "hit",
+            "miss"
+        ]
+        if (STATES.includes(state)) {
+            this._state = state
+        } else {
+            throw new TypeError("incorrect board square state")
+        }
+
+    }
+
 }

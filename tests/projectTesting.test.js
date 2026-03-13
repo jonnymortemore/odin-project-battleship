@@ -45,6 +45,7 @@ test("create gameboard correct in gameboard object", () => {
     //check array height
     expect(new Gameboard(10).gameboard[0].length).toBe(10);
     //check all the array values are 0
-    expect(new Gameboard(10).gameboard.every((i) => i == 0)).toBeTruthy
+    //.flat creates a linear array removing all sub arrays to make sure every checks all indexes
+    expect(new Gameboard(10).gameboard.flat().every((gridsquare) => gridsquare.state === "empty")).toBe(true)
 
 })
