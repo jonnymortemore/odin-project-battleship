@@ -1,7 +1,7 @@
-import { Ship } from "../src/ship.js";
+import { Ship, Gameboard} from "../src/ship.js";
 
 test("ship class exists", () => {
-    expect(new Ship()).toBeTruthy;
+    expect(typeof new Ship()).toBe("object");
 });
 
 test("ship sized correctly", () => {
@@ -29,4 +29,22 @@ test("ships can sink", () => {
     newShip.hit()
     newShip.hit()
     expect(ship.sunk).toBe(true)
+})
+
+//test gameboard
+test("create gameboard object", () => {
+    expect(typeof new Gameboard(5)).toBe("object")
+    expect(new Gameboard(5).boardsize).toBe(5)
+})
+
+test("create gameboard correct in gameboard object", () => {
+    expect(typeof new Gameboard(5).gameboard).toBe("object");
+    expect(Array.isArray(new Gameboard(5).gameboard)).toBe(true);
+    //check array width
+    expect(new Gameboard(10).gameboard.length).toBe(10);
+    //check array height
+    expect(new Gameboard(10).gameboard[0].length).toBe(10);
+    //check all the array values are 0
+    expect(new Gameboard(10).gameboard.every((i) => i == 0)).toBeTruthy
+
 })

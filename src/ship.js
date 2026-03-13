@@ -35,3 +35,34 @@ export class Ship {
         this.sunk = true;
     }
 }
+
+export class Gameboard {
+    constructor(size) {
+        this.boardsize = size
+        this.gameboard = this.createboard(this.boardsize)
+    }
+
+    get boardsize() {
+        return this._boardsize
+    }
+
+    set boardsize(size) {
+        this._boardsize = size
+    }
+
+    set gameboard(board) {
+        this._gameboard = board
+    }
+
+    get gameboard() {
+        return this._gameboard
+    }
+
+    createboard(size) {
+        const boardArray = Array.from({ length: size }, () =>
+        Array(size).fill(0)
+        );
+        return boardArray
+
+    }
+}
