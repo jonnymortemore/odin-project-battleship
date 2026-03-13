@@ -11,6 +11,11 @@ test("ship sized correctly", () => {
     expect(() => new Ship(-1)).toThrow(RangeError);
 });
 
+test("ship named correctly", () => {
+    expect(new Ship(5).shipName).toBe("ship")
+    expect(new Ship(5, "boat").shipName).toBe("boat")
+})
+
 test("ships should take hits", () => {
     const ship = new Ship(4);
     expect(ship.hits).toBe(0);

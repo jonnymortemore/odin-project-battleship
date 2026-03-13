@@ -1,8 +1,9 @@
 export class Ship {
-    constructor(size) {
+    constructor(size, name = "ship") {
         this.size = size;
         this.hits = 0
         this.sunk = false
+        this.shipName = name
     }
 
     get size() {
@@ -62,11 +63,18 @@ export class Gameboard {
         const boardArray = Array.from({ length: size }, () =>
         Array(size).fill(new BoardSquare)
         );
+
+
+
+
+
         return boardArray
 
     }
 
-    
+
+
+
 
 }
 
