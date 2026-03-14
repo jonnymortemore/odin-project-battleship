@@ -96,6 +96,7 @@ test("hits on gameboard", () => {
     expect(gb.receiveAttack(4, 1)).toBe(gb.states.miss)
     expect(gb.gameboard[1][1].ship.sunk).toBe(true)
     expect(gb.ships[0].name).toBe(gb.gameboard[1][1].ship.name)
+    expect(gb.gameEndState).toBe(true)
 
 });
     

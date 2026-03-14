@@ -48,6 +48,7 @@ export class Gameboard {
             empty: 0,
             hit: 2
         }
+        this.gameEndState = true
         
     }
 
@@ -174,7 +175,7 @@ export class Gameboard {
     }
 
     endGame() {
-        "all ships destroyed"
+       this.gameEndState = true
     }
 
     checkAllShipsDestroyed() {
@@ -195,3 +196,12 @@ class BoardSquare {
         this.state = state;
     }
 }
+
+export class Player {
+    constructor(playerNumber, playerName, gameboardSize) {
+        this.gameboard = new Gameboard(gameboardSize)
+        this.number = playerNumber
+        this.name = playerName
+    }
+}
+
