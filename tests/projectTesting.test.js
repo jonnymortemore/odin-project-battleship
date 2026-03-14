@@ -82,7 +82,8 @@ test("adding ship to gameboard", () => {
 
 test("randomly placing ships", () => {
     const newGameboard = new Gameboard(10);
-    newGameboard.setupShipStartingPositions()
+    const battleships = new Battleships()
+    newGameboard.setupShipStartingPositions(battleships.presetShips)
     //write some tests for placing ships - use a mock function to replace the random values with assigned values
 });
 
@@ -99,4 +100,14 @@ test("hits on gameboard", () => {
     expect(gb.gameEndState).toBe(true)
 
 });
+
+test("player created correctly", () => {
+    const player = new Player(1, "player", 10)
+    expect(player.name).toBe("player")
+})
+
+test("battleship game controller setup correctly", () => {
+    const battleships = new Battleships()
+    expect(battleships.player1.gameboard.boardsize).toBe(battleships.mapSize)
+})
     

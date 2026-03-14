@@ -98,10 +98,10 @@ export class Gameboard {
     }
 
     setupShipStartingPositions(presetShips) {
-        //setup random ship positions
+        
+        //setup random ship positions     
         for (const shipDetails of presetShips) {
             const ship = new Ship(shipDetails.size, shipDetails.name)
-
             while (true) {
                 //randomly pick an angle
                 const angle = (() => {
@@ -121,7 +121,6 @@ export class Gameboard {
                 }
             }
         }
-        console.table(this.gameboard)
     }
 
     receiveAttack(x, y) {
