@@ -12,8 +12,8 @@ test("ship sized correctly", () => {
 });
 
 test("ship named correctly", () => {
-    expect(new Ship(5).shipName).toBe("ship");
-    expect(new Ship(5, "boat").shipName).toBe("boat");
+    expect(new Ship(5).name).toBe("ship");
+    expect(new Ship(5, "boat").name).toBe("boat");
 });
 
 test("ships should take hits", () => {
@@ -84,4 +84,18 @@ test("randomly placing ships", () => {
     const newGameboard = new Gameboard(10);
     newGameboard.setupShipStartingPositions()
     //write some tests for placing ships - use a mock function to replace the random values with assigned values
-})
+});
+
+test("hits on gameboard", () => {
+    const gb = new Gameboard(10)
+    gb.addShip(new Ship(3, "boat"), 1, 1, 0);
+    expect(gb.receiveAttack(1, 1)).toBe(gb.states.hit)
+    expect(gb.receiveAttack(2, 1)).toBe(gb.states.hit)
+    expect(gb.gameboard[1][1].ship.hits).toBe(2)
+    expect(gb.receiveAttack(3, 1)).toBe(gb.states.hit)
+    expect(gb.receiveAttack(4, 1)).toBe(gb.states.miss)
+    expect(gb.gameboard[1][1].ship.sunk).toBe(true)
+    expect(gb.ships[0].name).toBe(gb.gameboard[1][1].ship.name)
+
+});
+    

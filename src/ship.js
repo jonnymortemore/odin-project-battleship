@@ -3,7 +3,7 @@ export class Ship {
         this.size = size;
         this.hits = 0;
         this.sunk = false;
-        this.shipName = name;
+        this.name = name;
     }
 
     get size() {
@@ -41,12 +41,14 @@ export class Gameboard {
     constructor(size) {
         this.boardsize = size;
         this.gameboard = this.createboard(this.boardsize);
+        this.ships = []
         this.states = {
             undetected: 1,
             miss: -1,
             empty: 0,
             hit: 2
         }
+        
     }
 
     get boardsize() {
@@ -74,6 +76,9 @@ export class Gameboard {
     }
 
     addShip(ship, x, y, angle) {
+        //add ship to ships array
+        this.ships.push(ship)
+
         let extraX = 0;
         let extraY = 0;
 
@@ -103,6 +108,7 @@ export class Gameboard {
         //setup random ship positions
         for (const shipDetails of presetShips) {
             const ship = new Ship(shipDetails.size, shipDetails.name)
+            
 
             while (true) {
                 //randomly pick an angle
@@ -131,12 +137,14 @@ export class Gameboard {
 
         if (hitPoint.ship === null) {
             hitPoint.state = this.states.miss
-            return false
+            return hitPoint.state
         }
 
         hitPoint.state = this.states.hit
         hitPoint.ship.hit()
-        return true
+        this.checkAllShipsDestroyed()
+        return hitPoint.state
+
     }
 
     #shipFits(ship, x, y, angle) {
@@ -162,6 +170,20 @@ export class Gameboard {
             }
         }
 
+        return true
+    }
+
+    endGame() {
+        "all ships destroyed"
+    }
+
+    checkAllShipsDestroyed() {
+        for (const ship of this.ships) {
+            if (ship.sunk === false) {
+                return false
+            }
+        }
+        this.endGame()
         return true
     }
    
