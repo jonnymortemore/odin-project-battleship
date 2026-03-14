@@ -97,19 +97,10 @@ export class Gameboard {
         }
     }
 
-    setupShipStartingPositions() {
-        const presetShips = [
-            { name: "Carrier", size: 5 },
-            { name: "Battleship", size: 4 },
-            { name: "Cruiser", size: 3 },
-            { name: "Submarine", size: 3 },
-            { name: "Destroyer", size: 2 }
-        ];
-
+    setupShipStartingPositions(presetShips) {
         //setup random ship positions
         for (const shipDetails of presetShips) {
             const ship = new Ship(shipDetails.size, shipDetails.name)
-            
 
             while (true) {
                 //randomly pick an angle
@@ -205,3 +196,22 @@ export class Player {
     }
 }
 
+export class Battleships {
+    constructor() {
+        this.mapSize = 10
+        this.presetShips =  [
+            { name: "Carrier", size: 5 },
+            { name: "Battleship", size: 4 },
+            { name: "Cruiser", size: 3 },
+            { name: "Submarine", size: 3 },
+            { name: "Destroyer", size: 2 }
+        ];
+        
+        this.player1 = new Player(1, "player", this.mapSize)
+        this.player2 = new Player(2, "CPU", this.mapSize)
+        
+        this.player1.gameboard.setupShipStartingPositions(this.presetShips)
+        this.player2.gameboard.setupShipStartingPositions(this.presetShips)
+
+    }
+}

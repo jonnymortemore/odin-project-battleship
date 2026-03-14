@@ -1,4 +1,4 @@
-import { Ship, Gameboard } from "../src/ship.js";
+import { Ship, Gameboard, Player, Battleships } from "../src/ship.js";
 
 test("ship class exists", () => {
     expect(typeof new Ship()).toBe("object");
