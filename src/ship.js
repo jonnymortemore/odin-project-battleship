@@ -121,12 +121,22 @@ export class Gameboard {
                     this.addShip(ship, x, y, angle)
                     break
                 }
-
-                
             }
         }
-
         console.table(this.gameboard)
+    }
+
+    receiveAttack(x, y) {
+        const hitPoint = this.gameboard[x][y];
+
+        if (hitPoint.ship === null) {
+            hitPoint.state = this.states.miss
+            return false
+        }
+
+        hitPoint.state = this.states.hit
+        hitPoint.ship.hit()
+        return true
     }
 
     #shipFits(ship, x, y, angle) {

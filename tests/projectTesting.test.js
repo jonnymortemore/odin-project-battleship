@@ -83,4 +83,5 @@ test("adding ship to gameboard", () => {
 test("randomly placing ships", () => {
     const newGameboard = new Gameboard(10);
     newGameboard.setupShipStartingPositions()
+    //write some tests for placing ships - use a mock function to replace the random values with assigned values
 })
