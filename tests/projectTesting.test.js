@@ -82,32 +82,30 @@ test("adding ship to gameboard", () => {
 
 test("randomly placing ships", () => {
     const newGameboard = new Gameboard(10);
-    const battleships = new Battleships()
-    newGameboard.setupShipStartingPositions(battleships.presetShips)
+    const battleships = new Battleships();
+    newGameboard.setupShipStartingPositions(battleships.presetShips);
     //write some tests for placing ships - use a mock function to replace the random values with assigned values
 });
 
 test("hits on gameboard", () => {
-    const gb = new Gameboard(10)
+    const gb = new Gameboard(10);
     gb.addShip(new Ship(3, "boat"), 1, 1, 0);
-    expect(gb.receiveAttack(1, 1)).toBe(gb.states.hit)
-    expect(gb.receiveAttack(2, 1)).toBe(gb.states.hit)
-    expect(gb.gameboard[1][1].ship.hits).toBe(2)
-    expect(gb.receiveAttack(3, 1)).toBe(gb.states.hit)
-    expect(gb.receiveAttack(4, 1)).toBe(gb.states.miss)
-    expect(gb.gameboard[1][1].ship.sunk).toBe(true)
-    expect(gb.ships[0].name).toBe(gb.gameboard[1][1].ship.name)
-    expect(gb.gameEndState).toBe(true)
-
+    expect(gb.receiveAttack(1, 1)).toBe(gb.states.hit);
+    expect(gb.receiveAttack(2, 1)).toBe(gb.states.hit);
+    expect(gb.gameboard[1][1].ship.hits).toBe(2);
+    expect(gb.receiveAttack(3, 1)).toBe(gb.states.hit);
+    expect(gb.receiveAttack(4, 1)).toBe(gb.states.miss);
+    expect(gb.gameboard[1][1].ship.sunk).toBe(true);
+    expect(gb.ships[0].name).toBe(gb.gameboard[1][1].ship.name);
+    expect(gb.gameEndState).toBe(true);
 });
 
 test("player created correctly", () => {
-    const player = new Player(1, "player", 10)
-    expect(player.name).toBe("player")
-})
+    const player = new Player(1, "player", 10);
+    expect(player.name).toBe("player");
+});
 
 test("battleship game controller setup correctly", () => {
-    const battleships = new Battleships()
-    expect(battleships.player1.gameboard.boardsize).toBe(battleships.mapSize)
-})
-    
+    const battleships = new Battleships();
+    expect(battleships.player1.gameboard.boardsize).toBe(battleships.mapSize);
+});

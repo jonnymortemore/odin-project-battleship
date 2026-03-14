@@ -41,15 +41,14 @@ export class Gameboard {
     constructor(size) {
         this.boardsize = size;
         this.gameboard = this.createboard(this.boardsize);
-        this.ships = []
+        this.ships = [];
         this.states = {
             undetected: 1,
             miss: -1,
             empty: 0,
-            hit: 2
-        }
-        this.gameEndState = true
-        
+            hit: 2,
+        };
+        this.gameEndState = true;
     }
 
     get boardsize() {
@@ -71,53 +70,62 @@ export class Gameboard {
     createboard(size) {
         //can't use .fill to fill a array with objects!
         const boardArray = Array.from({ length: size }, () =>
-            Array.from({ length: size }, () => new BoardSquare())
+            Array.from({ length: size }, () => new BoardSquare()),
         );
         return boardArray;
     }
 
     addShip(ship, x, y, angle) {
         //add ship to ships array
-        this.ships.push(ship)
+        this.ships.push(ship);
 
         let extraX = 0;
         let extraY = 0;
 
         switch (angle) {
-            case 0:   extraX = 1; break;
-            case 180: extraX = -1; break;
-            case 90:  extraY = 1; break;
-            case 270: extraY = -1; break;
+            case 0:
+                extraX = 1;
+                break;
+            case 180:
+                extraX = -1;
+                break;
+            case 90:
+                extraY = 1;
+                break;
+            case 270:
+                extraY = -1;
+                break;
         }
 
-        for(let i = 0; i < ship.size; i++) {
-            const bg = this.gameboard[x + (extraX * i)][y + (extraY * i)]
-            bg.ship = ship
-            bg.state = this.states.undetected
+        for (let i = 0; i < ship.size; i++) {
+            const bg = this.gameboard[x + extraX * i][y + extraY * i];
+            bg.ship = ship;
+            bg.state = this.states.undetected;
         }
     }
 
     setupShipStartingPositions(presetShips) {
-        
-        //setup random ship positions     
+        //setup random ship positions
         for (const shipDetails of presetShips) {
-            const ship = new Ship(shipDetails.size, shipDetails.name)
+            const ship = new Ship(shipDetails.size, shipDetails.name);
             while (true) {
                 //randomly pick an angle
                 const angle = (() => {
-                    const angles = [0, 90, 180, 270]
-                    const randomIndex = Math.floor(Math.random() * angles.length)
-                    return angles[randomIndex]
-                })()
+                    const angles = [0, 90, 180, 270];
+                    const randomIndex = Math.floor(
+                        Math.random() * angles.length,
+                    );
+                    return angles[randomIndex];
+                })();
 
-                //randomly pick X and Y 
-                const x = Math.floor(Math.random() * this.boardsize)
-                const y = Math.floor(Math.random() * this.boardsize)
+                //randomly pick X and Y
+                const x = Math.floor(Math.random() * this.boardsize);
+                const y = Math.floor(Math.random() * this.boardsize);
 
                 //check X and Y (with ship length) isn't out of bounds or overlapping any other ship - if position found break out of while loop
-                if(this.#shipFits(ship, x, y, angle)) {
-                    this.addShip(ship, x, y, angle)
-                    break
+                if (this.#shipFits(ship, x, y, angle)) {
+                    this.addShip(ship, x, y, angle);
+                    break;
                 }
             }
         }
@@ -127,57 +135,68 @@ export class Gameboard {
         const hitPoint = this.gameboard[x][y];
 
         if (hitPoint.ship === null) {
-            hitPoint.state = this.states.miss
-            return hitPoint.state
+            hitPoint.state = this.states.miss;
+            return hitPoint.state;
         }
 
-        hitPoint.state = this.states.hit
-        hitPoint.ship.hit()
-        this.checkAllShipsDestroyed()
-        return hitPoint.state
-
+        hitPoint.state = this.states.hit;
+        hitPoint.ship.hit();
+        this.checkAllShipsDestroyed();
+        return hitPoint.state;
     }
 
     #shipFits(ship, x, y, angle) {
         let extraX = 0;
         let extraY = 0;
-       
+
         switch (angle) {
-            case 0:   extraX = 1; break;
-            case 180: extraX = -1; break;
-            case 90:  extraY = 1; break;
-            case 270: extraY = -1; break;
+            case 0:
+                extraX = 1;
+                break;
+            case 180:
+                extraX = -1;
+                break;
+            case 90:
+                extraY = 1;
+                break;
+            case 270:
+                extraY = -1;
+                break;
         }
 
-        for(let i = 0; i < ship.size; i++) {
-            const newX = x + (extraX * i)
-            const newY = y + (extraY * i)
+        for (let i = 0; i < ship.size; i++) {
+            const newX = x + extraX * i;
+            const newY = y + extraY * i;
 
-            if (newX >= this.boardsize || newX < 0 || newY >= this.boardsize || newY < 0) {
-                return false
+            if (
+                newX >= this.boardsize ||
+                newX < 0 ||
+                newY >= this.boardsize ||
+                newY < 0
+            ) {
+                return false;
             }
             if (this.gameboard[newX][newY].state !== this.states.empty) {
-                return false
+                return false;
             }
         }
 
-        return true
+        return true;
     }
 
     endGame() {
-       this.gameEndState = true
+        this.gameEndState = true;
     }
 
     checkAllShipsDestroyed() {
         for (const ship of this.ships) {
             if (ship.sunk === false) {
-                return false
+                return false;
             }
         }
-        this.endGame()
-        return true
+        this.endGame();
+        return true;
     }
-   
 }
 
 class BoardSquare {
@@ -189,28 +208,27 @@ class BoardSquare {
 
 export class Player {
     constructor(playerNumber, playerName, gameboardSize) {
-        this.gameboard = new Gameboard(gameboardSize)
-        this.number = playerNumber
-        this.name = playerName
+        this.gameboard = new Gameboard(gameboardSize);
+        this.number = playerNumber;
+        this.name = playerName;
     }
 }
 
 export class Battleships {
     constructor() {
-        this.mapSize = 10
-        this.presetShips =  [
+        this.mapSize = 10;
+        this.presetShips = [
             { name: "Carrier", size: 5 },
             { name: "Battleship", size: 4 },
             { name: "Cruiser", size: 3 },
             { name: "Submarine", size: 3 },
-            { name: "Destroyer", size: 2 }
+            { name: "Destroyer", size: 2 },
         ];
-        
-        this.player1 = new Player(1, "player", this.mapSize)
-        this.player2 = new Player(2, "CPU", this.mapSize)
-        
-        this.player1.gameboard.setupShipStartingPositions(this.presetShips)
-        this.player2.gameboard.setupShipStartingPositions(this.presetShips)
 
+        this.player1 = new Player(1, "player", this.mapSize);
+        this.player2 = new Player(2, "CPU", this.mapSize);
+
+        this.player1.gameboard.setupShipStartingPositions(this.presetShips);
+        this.player2.gameboard.setupShipStartingPositions(this.presetShips);
     }
 }
