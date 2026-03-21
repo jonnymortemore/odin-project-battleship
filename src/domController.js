@@ -38,7 +38,6 @@ export class DomController {
             el.classList.add("miss")
             el.classList.remove("empty")
         }
-        
     }
 
 }

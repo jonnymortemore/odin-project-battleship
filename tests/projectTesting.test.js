@@ -109,3 +109,26 @@ test("battleship game controller setup correctly", () => {
     const battleships = new Battleships();
     expect(battleships.player1.gameboard.boardsize).toBe(battleships.mapSize);
 });
+
+test("battleship game sets players to correct type on start", () => {
+    const battleships = new Battleships();
+    expect(battleships.activePlayer.number).toBe(1);
+    expect(battleships.activePlayer.number).toBe(battleships.player1.number);
+    expect(battleships.combatentPlayer.number).toBe(battleships.player2.number);
+})
+
+test("battleships end turn switches active and combative players", () => {
+    const battleships = new Battleships();
+    expect(battleships.activePlayer.number).toBe(battleships.player1.number);
+    expect(battleships.combatentPlayer.number).toBe(battleships.player2.number);
+    battleships.endTurn()
+    expect(battleships.activePlayer.number).toBe(battleships.player2.number);
+    expect(battleships.combatentPlayer.number).toBe(battleships.player1.number);
+})
+
+test('turn counter', () => {
+    const battleships = new Battleships();
+    expect(battleships.turnCounter).toBe(1)
+    battleships.endTurn()
+    expect(battleships.turnCounter).toBe(2)
+})

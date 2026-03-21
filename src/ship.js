@@ -215,10 +215,11 @@ class BoardSquare {
 }
 
 export class Player {
-    constructor(playerNumber, playerName, gameboardSize) {
+    constructor(playerNumber, playerName, gameboardSize, playerType) {
         this.gameboard = new Gameboard(gameboardSize);
         this.number = playerNumber;
         this.name = playerName;
+        this.type = playerType
     }
 }
 
@@ -232,11 +233,43 @@ export class Battleships {
             { name: "Submarine", size: 3 },
             { name: "Destroyer", size: 2 },
         ];
+        this.turnCounter = 1;
 
-        this.player1 = new Player(1, "player", this.mapSize);
-        this.player2 = new Player(2, "CPU", this.mapSize);
+        this.player1 = new Player(1, "player", this.mapSize, "player");
+        this.player2 = new Player(2, "CPU", this.mapSize, "cpu");
 
         this.player1.gameboard.setupShipStartingPositions(this.presetShips);
         this.player2.gameboard.setupShipStartingPositions(this.presetShips);
+
+        this.activePlayer = this.player1
+        this.combatentPlayer = this.player2
     }
+
+    endTurn() { 
+        [this.activePlayer, this.combatentPlayer] = [this.combatentPlayer, this.activePlayer]
+        this.turnCounter += 1;
+        this.startTurn()
+    }
+
+    startTurn() {
+        if(this.activePlayer.type === "cpu") {
+            //this.cpuRandomAttack()
+        }
+    }
+
+    cpuRandomAttack() {
+        const states = this.combatentPlayer.gameboard.states
+        while(true) {
+            const randomX = Math.floor(Math.random() * this.mapSize);
+            const randomY = Math.floor(Math.random() * this.mapSize);
+
+            const gridSquare = this.combatentPlayer.gameboard.gameboard[randomX, randomY];
+
+            if(gridSquare.state ===  states.empty || gridSquare.state === states.undetected) {
+                this.combatentPlayer.gameboard.receiveAttack(randomX, randomY);
+                break;
+            }
+        }
+    }
+
 }
