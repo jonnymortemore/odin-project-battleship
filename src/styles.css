@@ -48,7 +48,36 @@ h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
 }
 
+:root {
+  --border: black;
+}
+
 body {
   font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+#gameboards {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.gameboard {
+  display: grid;
+  grid-template-columns: repeat(10, auto);
+  grid-template-rows: repeat(10, auto);
+  border: 5px solid var(--border);
+}
+
+.grid-element {
+  width: 60px;
+  height: 60px;
+  border: 2px solid var(--border);
+}
+
+.grid-element:hover {
+  background-color: red;
 }
 
