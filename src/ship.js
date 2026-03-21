@@ -149,7 +149,6 @@ export class Gameboard {
 
         hitPoint.state = this.states.hit;
         hitPoint.ship.hit();
-        this.checkAllShipsDestroyed();
         return hitPoint.state;
     }
 
@@ -192,17 +191,12 @@ export class Gameboard {
         return true;
     }
 
-    endGame() {
-        this.gameEndState = true;
-    }
-
     checkAllShipsDestroyed() {
         for (const ship of this.ships) {
             if (ship.sunk === false) {
                 return false;
             }
         }
-        this.endGame();
         return true;
     }
 }
@@ -245,6 +239,7 @@ export class Battleships {
         this.combatentPlayer = this.player2;
 
         this.dom = null;
+        this.gameEndState = false;
     }
 
     endTurn() {
@@ -253,28 +248,33 @@ export class Battleships {
             this.activePlayer,
         ];
         this.turnCounter += 1;
-        if(this.dom !== null) {
-             this.dom.updateGameDetails(this.turnCounter, this.activePlayer.name)
+        if (this.dom !== null) {
+            this.dom.updateGameDetails(
+                this.turnCounter,
+                this.activePlayer.name,
+            );
         }
-       
-        this.startTurn()
+
+        this.startTurn();
     }
 
     startTurn() {
         if (this.activePlayer.type === "cpu") {
             setTimeout(() => {
-                this.cpuRandomAttack()
-                this.endTurn()
-            }, 1000)
+                this.cpuRandomAttack();
+            }, 1000);
         }
     }
 
     cpuRandomAttack() {
         const states = this.combatentPlayer.gameboard.states;
         let attackEffect = null;
+        let randomX;
+        let randomY;
+
         while (attackEffect === null) {
-            const randomX = Math.floor(Math.random() * this.mapSize);
-            const randomY = Math.floor(Math.random() * this.mapSize);
+            randomX = Math.floor(Math.random() * this.mapSize);
+            randomY = Math.floor(Math.random() * this.mapSize);
 
             const gridSquare =
                 this.combatentPlayer.gameboard.gameboard[randomX][randomY];
@@ -287,16 +287,42 @@ export class Battleships {
                     randomX,
                     randomY,
                 );
-                if(this.dom !== null) {
-                    this.dom.registerCPUAttack(randomX, randomY, this.combatentPlayer.number, attackEffect, this.combatentPlayer.gameboard.states)
-                }
             }
+        }
+
+        if (this.dom !== null) {
+            this.dom.registerCPUAttack(
+                randomX,
+                randomY,
+                this.combatentPlayer.number,
+                attackEffect,
+                this.combatentPlayer.gameboard.states,
+            );
+        }
+
+        if (!this.checkForGameEnd(this.combatentPlayer)) {
+            this.endTurn();
         }
     }
 
     playerAttack(x, y, player) {
         const attackEffect = player.gameboard.receiveAttack(x, y);
-        this.endTurn()
+        if (!this.checkForGameEnd(this.combatentPlayer)) {
+            this.endTurn();
+        }
         return attackEffect;
+    }
+
+    checkForGameEnd(player) {
+        if (player.gameboard.checkAllShipsDestroyed()) {
+            this.endGame();
+            return true;
+        }
+        return false;
+    }
+
+    endGame() {
+        this.gameEndState = true;
+        this.dom.triggerGameEnd(this.activePlayer.name);
     }
 }

@@ -76,4 +76,12 @@ export class DomController {
         document.querySelector(".player-turn").innerText = "Current Player: " + playerName
     }
 
+    triggerGameEnd(winner) {
+        const victoryElement = document.querySelector(".victory");
+        victoryElement.hidden = false;
+        victoryElement.style.display = "flex"
+        victoryElement.innerText = `Winner: ${winner}!`
+        document.querySelector('#gameboards').style.pointerEvents = 'none';
+    }
+
 }

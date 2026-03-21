@@ -54,6 +54,10 @@ h1, h2, h3, h4, h5, h6 {
 
 body {
   font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .game-details {
@@ -75,6 +79,7 @@ body {
   justify-content: space-around;
   align-items: center;
   margin-top: 50px;
+  width: 100%;
 }
 
 .gameboard {
@@ -103,5 +108,17 @@ body {
 
 .miss {
   background-color: darkblue;
+}
+
+.victory {
+  border: 2px solid var(--border);
+  position: absolute;
+  background-color: white;
+  width: 25%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  border-radius: 20px;
 }
 
