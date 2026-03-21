@@ -69,4 +69,9 @@ export class DomController {
             
     }
 
+    updateRoundTracker(round) {
+        const tracker = document.querySelector(".round-counter");
+        tracker.innerText = "Round: " + round;
+    }
+
 }

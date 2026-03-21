@@ -253,6 +253,7 @@ export class Battleships {
             this.activePlayer,
         ];
         this.turnCounter += 1;
+        this.dom.updateRoundTracker(this.turnCounter)
         this.startTurn()
     }
 
