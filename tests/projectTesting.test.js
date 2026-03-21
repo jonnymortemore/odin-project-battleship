@@ -132,3 +132,9 @@ test('turn counter', () => {
     battleships.endTurn()
     expect(battleships.turnCounter).toBe(2)
 })
+
+test('cpu random attack', () => {
+    const battleships = new Battleships();
+    battleships.cpuRandomAttack()
+    //figure out how to test the random x/y of this consistently - spy on variables and add values?
+})

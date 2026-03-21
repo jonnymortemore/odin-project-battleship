@@ -78,9 +78,9 @@ export class Gameboard {
     hasShip(x, y) {
         //used to setup gameboard - returns true if has ship
         if (this.gameboard[x][y].ship !== null) {
-            return true
+            return true;
         }
-        return false
+        return false;
     }
 
     addShip(ship, x, y, angle) {
@@ -219,7 +219,7 @@ export class Player {
         this.gameboard = new Gameboard(gameboardSize);
         this.number = playerNumber;
         this.name = playerName;
-        this.type = playerType
+        this.type = playerType;
     }
 }
 
@@ -241,35 +241,56 @@ export class Battleships {
         this.player1.gameboard.setupShipStartingPositions(this.presetShips);
         this.player2.gameboard.setupShipStartingPositions(this.presetShips);
 
-        this.activePlayer = this.player1
-        this.combatentPlayer = this.player2
+        this.activePlayer = this.player1;
+        this.combatentPlayer = this.player2;
+
+        this.dom = null;
     }
 
-    endTurn() { 
-        [this.activePlayer, this.combatentPlayer] = [this.combatentPlayer, this.activePlayer]
+    endTurn() {
+        [this.activePlayer, this.combatentPlayer] = [
+            this.combatentPlayer,
+            this.activePlayer,
+        ];
         this.turnCounter += 1;
         this.startTurn()
     }
 
     startTurn() {
-        if(this.activePlayer.type === "cpu") {
-            //this.cpuRandomAttack()
+        if (this.activePlayer.type === "cpu") {
+            this.cpuRandomAttack()
+            this.endTurn()
         }
     }
 
     cpuRandomAttack() {
-        const states = this.combatentPlayer.gameboard.states
-        while(true) {
+        const states = this.combatentPlayer.gameboard.states;
+        let attackEffect = null;
+        while (attackEffect === null) {
             const randomX = Math.floor(Math.random() * this.mapSize);
             const randomY = Math.floor(Math.random() * this.mapSize);
 
-            const gridSquare = this.combatentPlayer.gameboard.gameboard[randomX, randomY];
+            const gridSquare =
+                this.combatentPlayer.gameboard.gameboard[randomX][randomY];
 
-            if(gridSquare.state ===  states.empty || gridSquare.state === states.undetected) {
-                this.combatentPlayer.gameboard.receiveAttack(randomX, randomY);
-                break;
+            console.log(gridSquare)
+
+            if (
+                gridSquare.state === states.empty ||
+                gridSquare.state === states.undetected
+            ) {
+                attackEffect = this.combatentPlayer.gameboard.receiveAttack(
+                    randomX,
+                    randomY,
+                );
+                this.dom.registerCPUAttack(randomX, randomY, this.combatentPlayer.number, attackEffect, this.combatentPlayer.gameboard.states)
             }
         }
     }
 
+    playerAttack(x, y, player) {
+        const attackEffect = player.gameboard.receiveAttack(x, y);
+        this.endTurn()
+        return attackEffect;
+    }
 }
