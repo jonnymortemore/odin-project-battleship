@@ -8,6 +8,8 @@ export class DomController {
 
     createGameBoard(size, container, player, playerBoard) {
         container.dataset.player = player.number
+        container.style.gridTemplateColumns = `repeat(${this.bs.mapSize}, auto)`;
+        container.style.gridTemplateRows = `repeat(${this.bs.mapSize}, auto)`;
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
                 const el = document.createElement('div');
@@ -69,9 +71,9 @@ export class DomController {
             
     }
 
-    updateRoundTracker(round) {
-        const tracker = document.querySelector(".round-counter");
-        tracker.innerText = "Round: " + round;
+    updateGameDetails(round, playerName) {
+        document.querySelector(".round-counter").innerText = "Round: " + round;
+        document.querySelector(".player-turn").innerText = "Current Player: " + playerName
     }
 
 }

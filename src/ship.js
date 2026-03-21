@@ -225,7 +225,7 @@ export class Player {
 
 export class Battleships {
     constructor() {
-        this.mapSize = 10;
+        this.mapSize = 8;
         this.presetShips = [
             { name: "Carrier", size: 5 },
             { name: "Battleship", size: 4 },
@@ -235,7 +235,7 @@ export class Battleships {
         ];
         this.turnCounter = 1;
 
-        this.player1 = new Player(1, "player", this.mapSize, "player");
+        this.player1 = new Player(1, "Player", this.mapSize, "player");
         this.player2 = new Player(2, "CPU", this.mapSize, "cpu");
 
         this.player1.gameboard.setupShipStartingPositions(this.presetShips);
@@ -253,7 +253,10 @@ export class Battleships {
             this.activePlayer,
         ];
         this.turnCounter += 1;
-        this.dom.updateRoundTracker(this.turnCounter)
+        if(this.dom !== null) {
+             this.dom.updateGameDetails(this.turnCounter, this.activePlayer.name)
+        }
+       
         this.startTurn()
     }
 
@@ -276,8 +279,6 @@ export class Battleships {
             const gridSquare =
                 this.combatentPlayer.gameboard.gameboard[randomX][randomY];
 
-            console.log(gridSquare)
-
             if (
                 gridSquare.state === states.empty ||
                 gridSquare.state === states.undetected
@@ -286,7 +287,9 @@ export class Battleships {
                     randomX,
                     randomY,
                 );
-                this.dom.registerCPUAttack(randomX, randomY, this.combatentPlayer.number, attackEffect, this.combatentPlayer.gameboard.states)
+                if(this.dom !== null) {
+                    this.dom.registerCPUAttack(randomX, randomY, this.combatentPlayer.number, attackEffect, this.combatentPlayer.gameboard.states)
+                }
             }
         }
     }

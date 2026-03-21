@@ -56,6 +56,19 @@ body {
   font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+.game-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.game-details * {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
 #gameboards {
   display: flex;
   flex-direction: row;
@@ -66,8 +79,6 @@ body {
 
 .gameboard {
   display: grid;
-  grid-template-columns: repeat(10, auto);
-  grid-template-rows: repeat(10, auto);
   border: 5px solid var(--border);
 }
 
