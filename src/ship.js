@@ -259,8 +259,10 @@ export class Battleships {
 
     startTurn() {
         if (this.activePlayer.type === "cpu") {
-            this.cpuRandomAttack()
-            this.endTurn()
+            setTimeout(() => {
+                this.cpuRandomAttack()
+                this.endTurn()
+            }, 1000)
         }
     }
 
