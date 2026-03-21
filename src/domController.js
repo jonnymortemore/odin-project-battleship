@@ -5,7 +5,7 @@ export class DomController {
         this.createGameBoard(this.bs.mapSize, document.querySelector("#enemy_gameboard"), this.bs.player2, false)
     }
 
-    createGameBoard(size, container, player, showships) {
+    createGameBoard(size, container, player, playerBoard) {
         console.log(player.gameboard)
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
@@ -14,11 +14,13 @@ export class DomController {
                 el.dataset.x = x;
                 el.dataset.y = y;
                 el.dataset.player = player.number
-                el.addEventListener('click', (e) => {
-                    this.registerAttack(e.target, player)
-                })
+                if(!playerBoard) {
+                    el.addEventListener('click', (e) => {
+                        this.registerAttack(e.target, player)
+                    })
+                }
                 container.appendChild(el);
-                if (player.gameboard.hasShip(x, y) && showships) {
+                if (player.gameboard.hasShip(x, y) && playerBoard) {
                     el.classList.remove("empty")
                     el.classList.add("ship")
                 }
