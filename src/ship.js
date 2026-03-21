@@ -75,6 +75,14 @@ export class Gameboard {
         return boardArray;
     }
 
+    hasShip(x, y) {
+        //used to setup gameboard - returns true if has ship
+        if (this.gameboard[x][y].ship !== null) {
+            return true
+        }
+        return false
+    }
+
     addShip(ship, x, y, angle) {
         //add ship to ships array
         this.ships.push(ship);

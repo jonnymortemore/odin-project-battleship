@@ -7,12 +7,8 @@ import { DomController } from "../src/domController.js"
 
 
 const battleship = new Battleships();
-const dom = new DomController();
+new DomController(battleship);
 
-console.log(battleship)
-
-dom.createGameBoard(battleship.mapSize, document.querySelector("#active_gameboard"))
-dom.createGameBoard(battleship.mapSize, document.querySelector("#enemy_gameboard"))
 
 
 

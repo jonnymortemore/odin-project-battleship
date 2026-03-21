@@ -75,9 +75,22 @@ body {
   width: 60px;
   height: 60px;
   border: 2px solid var(--border);
+  background-color: lightblue;
 }
 
-.grid-element:hover {
+.grid-element:not(.miss):not(.hit):hover {
+  background-color: lightsalmon;
+}
+
+.ship {
+  background-color: grey;
+}
+
+.hit {
   background-color: red;
+}
+
+.miss {
+  background-color: darkblue;
 }
 
