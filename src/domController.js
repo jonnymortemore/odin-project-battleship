@@ -1,6 +1,8 @@
+import { Battleships } from "../src/ship.js";
+
 export class DomController {
-    constructor(battleshipGame) {
-        this.bs = battleshipGame;
+    constructor() {
+        this.bs = new Battleships();;
         this.bs.dom = this;
         this.createGameBoard(this.bs.mapSize, document.querySelector("#active_gameboard"), this.bs.player1, true);
         this.createGameBoard(this.bs.mapSize, document.querySelector("#enemy_gameboard"), this.bs.player2, false);
@@ -83,5 +85,4 @@ export class DomController {
         victoryElement.innerText = `Winner: ${winner}!`
         document.querySelector('#gameboards').style.pointerEvents = 'none';
     }
-
 }
