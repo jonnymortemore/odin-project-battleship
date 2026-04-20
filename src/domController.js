@@ -93,17 +93,27 @@ export class DomController {
     }
 
     triggerGameEnd(winner) {
+        //show victory popup
         const victoryElement = document.querySelector(".victory");
         victoryElement.hidden = false;
         victoryElement.style.display = "flex"
         victoryElement.innerText = `Winner: ${winner}!`
+        //can't use boards anymore
         document.querySelector('#gameboards').style.pointerEvents = 'none';
     }
 
     triggerGameReset() {
+        //empty board elements
         document.querySelectorAll(".gameboard").forEach((div) => {
             div.innerHTML = "";
         })
+        //hide victory popup
+        const victoryElement = document.querySelector(".victory");
+        victoryElement.hidden = false;
+        victoryElement.style.display = "none";
+        //reactivate boards
+        document.querySelector('#gameboards').style.pointerEvents = 'auto';
+        //setup new game
         this.setupGame()
     }
 }
