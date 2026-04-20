@@ -2,7 +2,21 @@ import { Battleships } from "../src/ship.js";
 
 export class DomController {
     constructor() {
-        this.bs = new Battleships();;
+        this.setupPageButtons();
+        this.setupGame();
+    }
+
+    setupPageButtons() {
+        //reset button 
+        const resetButton = document.querySelector("#reset_button")
+        resetButton.onclick = () => {
+            this.triggerGameReset()
+        }
+
+    }
+
+    setupGame() {
+        this.bs = new Battleships();
         this.bs.dom = this;
         this.createGameBoard(this.bs.mapSize, document.querySelector("#active_gameboard"), this.bs.player1, true);
         this.createGameBoard(this.bs.mapSize, document.querySelector("#enemy_gameboard"), this.bs.player2, false);
@@ -84,5 +98,12 @@ export class DomController {
         victoryElement.style.display = "flex"
         victoryElement.innerText = `Winner: ${winner}!`
         document.querySelector('#gameboards').style.pointerEvents = 'none';
+    }
+
+    triggerGameReset() {
+        document.querySelectorAll(".gameboard").forEach((div) => {
+            div.innerHTML = "";
+        })
+        this.setupGame()
     }
 }
