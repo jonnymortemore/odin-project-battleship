@@ -138,3 +138,4 @@ test('cpu random attack', () => {
     battleships.cpuRandomAttack()
     //figure out how to test the random x/y of this consistently - spy on variables and add values?
 })
+

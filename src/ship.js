@@ -4,6 +4,8 @@ export class Ship {
         this.hits = 0;
         this.sunk = false;
         this.name = name;
+        this.coordinates = [];
+        this.angle = 0;
     }
 
     get size() {
@@ -106,7 +108,11 @@ export class Gameboard {
         }
 
         for (let i = 0; i < ship.size; i++) {
-            const bg = this.gameboard[x + extraX * i][y + extraY * i];
+            const pickedX = x + extraX * i;
+            const pickedY = y + extraY * i;
+            const bg = this.gameboard[pickedX][pickedY];
+            ship.coordinates.push({x: pickedX, y: pickedY});
+            ship.angle = angle;
             bg.ship = ship;
             bg.state = this.states.undetected;
         }
@@ -265,20 +271,152 @@ export class Battleships {
     startTurn() {
         if (this.activePlayer.type === "cpu") {
             setTimeout(() => {
-                this.cpuRandomAttack();
+                this.cpuAttack();
             }, 1000);
         }
     }
 
-    
+    cpuAttack() {
+        let attackCoordinates;
+        attackCoordinates = this.cpuTargettedAttack()
+        if (!attackCoordinates) {
+            attackCoordinates = this.cpuRandomAttack()
+        }
+        const attackEffect = this.combatentPlayer.gameboard.receiveAttack(
+                    attackCoordinates.x,
+                    attackCoordinates.y,
+        );
+
+        if (this.dom !== null) {
+            this.dom.registerCPUAttack(
+                attackCoordinates.x,
+                attackCoordinates.y,
+                this.combatentPlayer.number,
+                attackEffect,
+                this.combatentPlayer.gameboard.states,
+            );
+        }
+
+        if (!this.checkForGameEnd(this.combatentPlayer)) {
+            this.endTurn();
+        }
+        
+    }
+
+    cpuTargettedAttack() {
+        //if no hits yet -> return false        
+        function getHitships(ships) {
+            const hitShips = [];
+            for (const ship of ships) {
+                if (ship.hits !== 0 && !ship.sunk) {
+                    hitShips.push(ship)
+                }
+            };
+            return hitShips
+        }
+
+        function shuffle(array) {
+            //Fisher–Yates Shuffle
+
+            if (array.length === 0) {
+                return array;
+            }
+
+            for (let i = array.length - 1; i > 0; i--) {
+                // Generate a random index from 0 to i
+                const j = Math.floor(Math.random() * (i + 1));
+                
+                // Swap elements array[i] and array[j]
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function pickHitCoordinate(x, y, angle, gameboard) {
+            if (angle === "any") {
+                //pick random orthagonal angle
+                const coordinates = shuffle([
+                { x: x - 1, y: y }, // left
+                { x: x + 1, y: y }, // right
+                { x: x, y: y - 1 }, // up
+                { x: x, y: y + 1 }, // down
+                ]);
+                for (const coord of coordinates) {
+                    const boardSquare = gameboard[coord.x][coord.y];
+                    if (boardSquare.state !== states.hit && boardSquare.state !== states.miss) {
+                        return {x: coord.x, y: coord.y}
+                    }   
+                }
+            } else {
+                //pick coordinate based on angle
+                const coordinates = ((x, y, angle) => {
+                    if (angle === 0 || angle === 180) {
+                            return [
+                                { x: x + 1, y: y }, // right,
+                                { x: x - 1, y: y} // left
+                            ]
+                        } 
+                        else {
+                            return [
+                                { x: x, y: y + 1 }, // up,
+                                { x: x, y: y - 1 } // down
+                            ]
+                        }
+                })(x, y, angle)
+                for (const coord of coordinates) {
+                    const boardSquare = gameboard[coord.x][coord.y];
+                    if (boardSquare.state !== states.hit && boardSquare.state !== states.miss) {
+                        return {x: coord.x, y: coord.y}
+                    } 
+                }
+            }
+            return false
+        }
+
+        const states = this.combatentPlayer.gameboard.states;
+        const hitShips = shuffle(getHitships(this.combatentPlayer.gameboard.ships));
+        let attackCoordinates;
+
+        //No hit ships -> return false so can randomAttack
+        if(hitShips.length === 0) {
+            return false
+        }
+
+        for (const ship of hitShips) {
+            let angle;
+            if (ship.hits === 1) {
+                //single hit - pick any grid square around the point 
+                angle = "any";
+            } else {
+                // multiple hits - pick grid square smarter using ship angle
+                angle = ship.angle
+            }
+
+            //loop through ship coordinates and check if hit
+            for (const {x, y} of ship.coordinates) {
+                const boardSquare = this.combatentPlayer.gameboard.gameboard[x][y];
+                if (boardSquare.state === states.hit) {
+                    attackCoordinates = pickHitCoordinate(x, y, angle, this.combatentPlayer.gameboard.gameboard);
+                    if (attackCoordinates !== false) {
+                        return attackCoordinates
+                    }
+                }
+            }
+        }
+
+        //if couldn't resolve any attacks using above - return false
+        return false
+            
+            
+            
+    }
 
     cpuRandomAttack() {
         const states = this.combatentPlayer.gameboard.states;
-        let attackEffect = null;
         let randomX;
         let randomY;
 
-        while (attackEffect === null) {
+        while (true) {
             randomX = Math.floor(Math.random() * this.mapSize);
             randomY = Math.floor(Math.random() * this.mapSize);
 
@@ -289,25 +427,8 @@ export class Battleships {
                 gridSquare.state === states.empty ||
                 gridSquare.state === states.undetected
             ) {
-                attackEffect = this.combatentPlayer.gameboard.receiveAttack(
-                    randomX,
-                    randomY,
-                );
+                return {x: randomX, y: randomY}
             }
-        }
-
-        if (this.dom !== null) {
-            this.dom.registerCPUAttack(
-                randomX,
-                randomY,
-                this.combatentPlayer.number,
-                attackEffect,
-                this.combatentPlayer.gameboard.states,
-            );
-        }
-
-        if (!this.checkForGameEnd(this.combatentPlayer)) {
-            this.endTurn();
         }
     }
 
