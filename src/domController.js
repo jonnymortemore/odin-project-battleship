@@ -17,7 +17,7 @@ export class DomController {
 
     setupGame() {
         this.bs = new Battleships();
-        this.bs.dom = this;
+        this.bs.addDomController(this);
         this.createGameBoard(this.bs.mapSize, document.querySelector("#active_gameboard"), this.bs.player1, true);
         this.createGameBoard(this.bs.mapSize, document.querySelector("#enemy_gameboard"), this.bs.player2, false);
     }

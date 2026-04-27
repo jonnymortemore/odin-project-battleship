@@ -242,6 +242,10 @@ export class Battleships {
         this.gameEndState = false;
     }
 
+    addDomController(dom) {
+        this.dom = dom;
+    }
+ 
     endTurn() {
         [this.activePlayer, this.combatentPlayer] = [
             this.combatentPlayer,
@@ -265,6 +269,8 @@ export class Battleships {
             }, 1000);
         }
     }
+
+    
 
     cpuRandomAttack() {
         const states = this.combatentPlayer.gameboard.states;
