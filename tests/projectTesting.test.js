@@ -146,6 +146,5 @@ test('board square ship position', () => {
     expect(gb.gameboard[2][1].shipSection).toBe("middle");
     expect(gb.gameboard[3][1].shipSection).toBe("front");
     expect(gb.gameboard[4][1].shipSection).toBe("none");
-
 })
 
