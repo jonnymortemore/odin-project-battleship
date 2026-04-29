@@ -40,8 +40,12 @@ export class DomController {
                 }
                 container.appendChild(el);
                 if (player.gameboard.hasShip(x, y) && playerBoard) {
-                    el.classList.remove("empty")
-                    el.classList.add("ship")
+                    const shipAngle = player.gameboard.getShipAngle(x, y);
+                    const shipSection = player.gameboard.getShipSection(x, y);
+                    el.classList.remove("empty");
+                    el.classList.add("ship");
+                    el.classList.add(shipAngle);
+                    el.classList.add(shipSection);
                 }
             }
         }

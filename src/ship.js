@@ -79,10 +79,19 @@ export class Gameboard {
 
     hasShip(x, y) {
         //used to setup gameboard - returns true if has ship
-        if (this.gameboard[x][y].ship !== null) {
+        const boardSquare = this.gameboard[x][y];
+        if (boardSquare.ship !== null) {
             return true;
         }
         return false;
+    }
+
+    getShipAngle(x, y) {
+        return this.gameboard[x][y].ship.angle;
+    }
+
+    getShipSection(x, y) {
+        return this.gameboard[x][y].shipSection;
     }
 
     addShip(ship, x, y, angle) {
