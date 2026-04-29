@@ -106,6 +106,18 @@ body {
   border: 1px dashed darkblue;
 }
 
+.svg-container {
+  pointer-events: none;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  left: 0;
+}
+
 #enemy_gameboard .grid-element:not(.miss):not(.hit):hover {
   background-color: lightsalmon;
 }
@@ -184,11 +196,6 @@ body {
 }
 
 
-
-
-.miss {
-  background-color: darkblue;
-}
 
 .victory {
   border: 2px solid var(--border);
