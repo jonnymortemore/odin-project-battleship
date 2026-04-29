@@ -110,11 +110,21 @@ export class Gameboard {
         for (let i = 0; i < ship.size; i++) {
             const pickedX = x + extraX * i;
             const pickedY = y + extraY * i;
-            const bg = this.gameboard[pickedX][pickedY];
+            const boardSquare = this.gameboard[pickedX][pickedY];
             ship.coordinates.push({ x: pickedX, y: pickedY });
             ship.angle = angle;
-            bg.ship = ship;
-            bg.state = this.states.undetected;
+            boardSquare.ship = ship;
+            boardSquare.state = this.states.undetected;
+            switch (i) {
+                case 0:
+                    boardSquare.shipSection = "back";
+                    break;
+                case ship.size - 1: 
+                    boardSquare.shipSection = "front";
+                    break;
+                default: 
+                    boardSquare.shipSection = "middle";
+            }
         }
     }
 
@@ -208,9 +218,11 @@ export class Gameboard {
 }
 
 class BoardSquare {
-    constructor(ship = null, state = 0) {
+    // ship type - back / middle / front / none
+    constructor(ship = null, state = 0, shipSection = "none") {
         this.ship = ship;
         this.state = state;
+        this.shipSection = shipSection;
     }
 }
 

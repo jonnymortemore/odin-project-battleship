@@ -139,3 +139,13 @@ test('cpu random attack', () => {
     //figure out how to test the random x/y of this consistently - spy on variables and add values?
 })
 
+test('board square ship position', () => {
+    const gb = new Gameboard(10);
+    gb.addShip(new Ship(3, "boat"), 1, 1, 0);
+    expect(gb.gameboard[1][1].shipSection).toBe("back");
+    expect(gb.gameboard[2][1].shipSection).toBe("middle");
+    expect(gb.gameboard[3][1].shipSection).toBe("front");
+    expect(gb.gameboard[4][1].shipSection).toBe("none");
+
+})
+
