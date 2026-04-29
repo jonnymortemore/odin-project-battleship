@@ -49,7 +49,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 :root {
-  --border: black;
+  --outer-border: black;
+  --ship-back-radius: 15px;
+  --ship-front-radius: 100px;
 }
 
 body {
@@ -84,27 +86,105 @@ body {
 
 .gameboard {
   display: grid;
-  border: 5px solid var(--border);
+  border: 5px solid var(--outer-border);
 }
 
 .grid-element {
   width: 60px;
   height: 60px;
-  border: 2px solid var(--border);
   background-color: lightblue;
+  position: relative;
+}
+
+.border-element {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  border: 1px dashed darkblue;
 }
 
 #enemy_gameboard .grid-element:not(.miss):not(.hit):hover {
   background-color: lightsalmon;
 }
 
+/* SHIP CLASSES */
 .ship {
+  width: 100%;
+  height: 100%;
+  border: 3px rgb(66, 65, 65);
+}
+
+.ship.not-hit {
   background-color: grey;
 }
 
-.hit {
+.ship.hit {
   background-color: red;
 }
+/* top / right / bottom / left */
+/* top / left and right / bottom */
+/* top and bottom / left and right */
+.ship.back.angle-0 {
+  border-top-left-radius: var(--ship-back-radius);
+  border-bottom-left-radius: var(--ship-back-radius);
+  border-style: solid none solid solid;
+}
+
+.ship.back.angle-90 {
+  border-top-left-radius: var(--ship-back-radius);
+  border-top-right-radius: var(--ship-back-radius);
+  border-style: solid solid none;
+}
+
+.ship.back.angle-180 {
+  border-bottom-right-radius: var(--ship-back-radius);
+  border-top-right-radius: var(--ship-back-radius);
+  border-style: solid solid solid none;
+}
+
+.ship.back.angle-270 {
+  border-bottom-right-radius: var(--ship-back-radius);
+  border-bottom-left-radius: var(--ship-back-radius);
+  border-style: none solid solid;
+}
+
+.ship.middle.angle-0, .ship.middle.angle-180  {
+  border-style: solid none;
+}
+
+.ship.middle.angle-90, .ship.middle.angle-270 {
+  border-style: none solid;
+}
+
+.ship.front.angle-0 {
+  border-style: solid solid solid none;
+  border-top-right-radius: var(--ship-front-radius);
+  border-bottom-right-radius: var(--ship-front-radius);
+}
+
+.ship.front.angle-90 {
+  border-style: none solid solid solid;
+  border-bottom-left-radius: var(--ship-front-radius);
+  border-bottom-right-radius: var(--ship-front-radius);
+}
+
+.ship.front.angle-180 {
+  border-style: solid none solid solid;
+  border-bottom-left-radius: var(--ship-front-radius);
+  border-top-left-radius: var(--ship-front-radius);
+}
+
+.ship.front.angle-270 {
+  border-style: solid solid none solid;
+  border-top-right-radius: var(--ship-front-radius);
+  border-top-left-radius: var(--ship-front-radius);
+}
+
+
+
 
 .miss {
   background-color: darkblue;

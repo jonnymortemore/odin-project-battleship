@@ -22,6 +22,18 @@ export class DomController {
         this.createGameBoard(this.bs.mapSize, document.querySelector("#enemy_gameboard"), this.bs.player2, false);
     }
 
+    #createShipElements(el, player, x, y) {
+        const shipAngle = player.gameboard.getShipAngle(x, y);
+        const shipSection = player.gameboard.getShipSection(x, y);
+        const shipEl = document.createElement('div');
+        shipEl.classList.add("ship");
+        shipEl.classList.add(shipSection);
+        shipEl.classList.add(`angle-${shipAngle}`);
+        shipEl.classList.add("not-hit");
+        el.appendChild(shipEl);
+        return shipEl;
+    }
+
     createGameBoard(size, container, player, playerBoard) {
         container.dataset.player = player.number
         container.style.gridTemplateColumns = `repeat(${this.bs.mapSize}, auto)`;
@@ -29,10 +41,13 @@ export class DomController {
         for (let y = 0; y < size; y++) {
             for (let x = 0; x < size; x++) {
                 const el = document.createElement('div');
-                el.className = "grid-element empty";
+                el.className = "grid-element";
                 el.dataset.x = x;
                 el.dataset.y = y;
                 el.dataset.player = player.number
+                const border = document.createElement('div');
+                border.className = 'border-element';
+                el.appendChild(border);
                 if(!playerBoard) {
                     el.addEventListener('click', (e) => {
                         this.registerAttackFromPlayer(e.target, player)
@@ -40,12 +55,7 @@ export class DomController {
                 }
                 container.appendChild(el);
                 if (player.gameboard.hasShip(x, y) && playerBoard) {
-                    const shipAngle = player.gameboard.getShipAngle(x, y);
-                    const shipSection = player.gameboard.getShipSection(x, y);
-                    el.classList.remove("empty");
-                    el.classList.add("ship");
-                    el.classList.add(shipAngle);
-                    el.classList.add(shipSection);
+                    this.#createShipElements(el, player, x, y)
                 }
             }
         }
@@ -57,25 +67,32 @@ export class DomController {
         const attackEffect = this.bs.playerAttack(el.dataset.x, el.dataset.y, player)
 
         if (attackEffect === player.gameboard.states.hit) {
-            el.classList.add("hit")
+            const shipEl = this.#createShipElements(el, player, el.dataset.x, el.dataset.y)
+            shipEl.classList.remove("not-hit");
+            shipEl.classList.add("hit");
         }
         if (attackEffect === player.gameboard.states.miss) {
-            el.classList.add("miss")
-            el.classList.remove("empty")
+            el.classList.add("miss");
+            el.classList.remove("empty");
         }
     }
 
     registerCPUAttack(x, y, playerNumber, attackEffect, states) {
-        const parent = findParent(document.querySelectorAll(".gameboard"));
+        const gameboard = findParent(document.querySelectorAll(".gameboard"));
 
-        for (const child of parent.children) {
-            if(parseInt(child.dataset.x) === x && parseInt(child.dataset.y) === y) {
+        for (const boardSquare of gameboard.children) {
+            if(parseInt(boardSquare.dataset.x) === x && parseInt(boardSquare.dataset.y) === y) {
                 if (attackEffect === states.hit) {
-                    child.classList.add("hit")
+                    for (const element of boardSquare.children) {
+                        if (element.classList.contains('ship')) {
+                            element.classList.remove("not-hit");
+                            element.classList.add("hit");
+                        }
+                    }
                 }
                 if (attackEffect === states.miss) {
-                    child.classList.add("miss")
-                    child.classList.remove("empty")
+                    boardSquare.classList.add("miss");
+                    boardSquare.classList.remove("empty");
                 }
                 break;
             }
