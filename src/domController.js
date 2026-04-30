@@ -25,6 +25,7 @@ export class DomController {
         this.bs.addDomController(this);
         this.createGameBoard(this.bs.mapSize, document.querySelector("#active_gameboard"), this.bs.player1, true);
         this.createGameBoard(this.bs.mapSize, document.querySelector("#enemy_gameboard"), this.bs.player2, false);
+        this.updateGameDetails(1, this.bs.player1.name);
     }
 
     #createShipElements(el, player, x, y, immediateHit) {
@@ -154,16 +155,16 @@ export class DomController {
     }
 
     updateGameDetails(round, playerName) {
-        document.querySelector(".round-counter").innerText = "Round: " + round;
-        document.querySelector(".player-turn").innerText = "Current Player: " + playerName
+        document.querySelector(".round-counter").innerText = round;
+        document.querySelector(".player-turn").innerText = playerName;
     }
 
     triggerGameEnd(winner) {
         //show victory popup
-        const victoryElement = document.querySelector(".victory");
-        victoryElement.hidden = false;
-        victoryElement.style.display = "flex"
-        victoryElement.innerText = `Winner: ${winner}!`
+        const victoryContainer = document.querySelector(".victory-container");
+        victoryContainer.hidden = false;
+        victoryContainer.style.display = "flex"
+        document.querySelector("#victory").innerText = `${winner}!`;
         //can't use boards anymore
         document.querySelector('#gameboards').style.pointerEvents = 'none';
     }
@@ -174,7 +175,7 @@ export class DomController {
             div.innerHTML = "";
         })
         //hide victory popup
-        const victoryElement = document.querySelector(".victory");
+        const victoryElement = document.querySelector(".victory-container");
         victoryElement.hidden = false;
         victoryElement.style.display = "none";
         //reactivate boards

@@ -60,27 +60,17 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.game-details {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-.game-details * {
   font-weight: bold;
   font-size: 1.5em;
 }
+
 
 #gameboards {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 100px;
   width: 100%;
 }
 
@@ -197,23 +187,88 @@ body {
 
 
 
-.victory {
-  border: 2px solid var(--border);
-  position: absolute;
-  background-color: white;
-  width: 25%;
-  flex-direction: row;
+/* UI */
+.round-container {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 50px;
+  background-color: lightgray;
+  padding: 20px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+  border-right: 3px solid darkgray;
+  border-bottom: 3px solid darkgray;
+
+}
+
+.player-turn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: lightgray;
+  padding: 20px;
   border-radius: 20px;
+  border-right: 3px solid darkgray;
+  border-bottom: 3px solid darkgray;
+
+}
+
+.game-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  margin-top: 20px;
+  border-top: 2px solid lightgray;
+  padding: 20px;
 }
 
 button {
   border-radius: 10px;
-  padding: 10px;
+  padding: 30px;
+  background-color: lightgray;
+  border: none;
+  border-bottom: 5px solid darkgray;
+  border-right: 5px solid darkgray;
+
+}
+
+button:hover {
+  background-color: grey;
+  color: white;
+  border-color: rgb(60, 60, 60);
 }
 
 button:active {
-  background-color: grey;
+  background-color: rgb(60, 60, 60);
+  border: none;
 }
+
+.victory-container {
+  border: 2px solid var(--border);
+  position: absolute;
+  background-color: lightgrey;
+  width: 25%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  border-radius: 20px;
+  border-right: 3px solid darkgray;
+  border-bottom: 3px solid darkgray;
+}
+
+.victory-container * {
+  margin-bottom: 10px;
+}
+
