@@ -256,8 +256,8 @@ export class Battleships {
         ];
         this.turnCounter = 1;
 
-        this.player1 = new Player(1, "Player", this.mapSize, "player");
-        this.player2 = new Player(2, "CPU", this.mapSize, "cpu");
+        this.player1 = new Player(1, "You", this.mapSize, "player");
+        this.player2 = new Player(2, "Computer", this.mapSize, "cpu");
 
         this.player1.gameboard.setupShipStartingPositions(this.presetShips);
         this.player2.gameboard.setupShipStartingPositions(this.presetShips);
@@ -285,7 +285,6 @@ export class Battleships {
                 this.activePlayer.name,
             );
         }
-
         this.startTurn();
     }
 
