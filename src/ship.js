@@ -95,9 +95,29 @@ export class Gameboard {
     }
 
     addShip(size, name, x, y, angle) {
+        //check if ship is already placed
+        const createOrFindShip = (name, size, angle) => {
+            //find current ship matching name and remove from ship array and from each coordinate
+            for (const currentShip of this.ships) {
+                if (currentShip.name === name) {
+                    console.log(currentShip)
+                    for (const {x, y} of currentShip.coordinates) {
+                        this.gameboard[x][y] = new BoardSquare()
+                    }
+                    currentShip.coordinates.length = 0;
+                    return currentShip
+                }
+            }
+            //if ship deosn't already exist, create new ship object
+            const newShip = new Ship(size, name, angle);
+            this.ships.push(newShip);
+            return newShip
+        }
+
+        const ship = createOrFindShip(name, size, angle);
+
         //add ship to ships array
-        const ship = new Ship(size, name, angle);
-        this.ships.push(ship);
+        
         let extraX = 0;
         let extraY = 0;
 
