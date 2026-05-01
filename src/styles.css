@@ -278,7 +278,6 @@ button:active {
   width: 60px;
   height: 60px;
   background-color: none;
-  position: relative;
 }
 
 .ship-selection-container {

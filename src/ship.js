@@ -1,11 +1,11 @@
 export class Ship {
-    constructor(size, name = "ship") {
+    constructor(size, name = "ship", angle = 0) {
         this.size = size;
         this.hits = 0;
         this.sunk = false;
         this.name = name;
         this.coordinates = [];
-        this.angle = 0;
+        this.angle = angle;
     }
 
     get size() {
@@ -94,10 +94,10 @@ export class Gameboard {
         return this.gameboard[x][y].shipSection;
     }
 
-    addShip(ship, x, y, angle) {
+    addShip(size, name, x, y, angle) {
         //add ship to ships array
+        const ship = new Ship(size, name, angle);
         this.ships.push(ship);
-
         let extraX = 0;
         let extraY = 0;
 
@@ -121,7 +121,6 @@ export class Gameboard {
             const pickedY = y + extraY * i;
             const boardSquare = this.gameboard[pickedX][pickedY];
             ship.coordinates.push({ x: pickedX, y: pickedY });
-            ship.angle = angle;
             boardSquare.ship = ship;
             boardSquare.state = this.states.undetected;
             switch (i) {
@@ -140,7 +139,6 @@ export class Gameboard {
     randomizeShipStartingPositions(presetShips) {
         //setup random ship positions
         for (const shipDetails of presetShips) {
-            const ship = new Ship(shipDetails.size, shipDetails.name);
             while (true) {
                 //randomly pick an angle
                 const angle = (() => {
@@ -156,8 +154,8 @@ export class Gameboard {
                 const y = Math.floor(Math.random() * this.boardsize);
 
                 //check X and Y (with ship length) isn't out of bounds or overlapping any other ship - if position found break out of while loop
-                if (this.#shipFits(ship, x, y, angle)) {
-                    this.addShip(ship, x, y, angle);
+                if (this.#shipFits(shipDetails.size, x, y, angle)) {
+                    this.addShip(shipDetails.size, shipDetails.name, x, y, angle);
                     break;
                 }
             }
@@ -177,7 +175,7 @@ export class Gameboard {
         return hitPoint.state;
     }
 
-    #shipFits(ship, x, y, angle) {
+    #shipFits(size, x, y, angle) {
         let extraX = 0;
         let extraY = 0;
 
@@ -196,7 +194,7 @@ export class Gameboard {
                 break;
         }
 
-        for (let i = 0; i < ship.size; i++) {
+        for (let i = 0; i < size; i++) {
             const newX = x + extraX * i;
             const newY = y + extraY * i;
 

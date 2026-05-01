@@ -26,24 +26,45 @@ export class DomController {
             this.bs.setupPlayerShips(this.bs.player1);
             this.createGameBoard(this.bs.mapSize, document.querySelector("#active_gameboard"), this.bs.player1, true);
         }
+        const startGame = document.querySelector('#start_game');
+        startGame.onclick = () => {
+            this.startGame();
+        };
 
     }
 
     setupGame() {
         this.bs = new Battleships();
         this.bs.addDomController(this);
+        document.querySelector('#enemy_gameboard').style.pointerEvents = 'none';
         this.createGameBoard(this.bs.mapSize, document.querySelector("#active_gameboard"), this.bs.player1, true);
         this.createGameBoard(this.bs.mapSize, document.querySelector("#enemy_gameboard"), this.bs.player2, false);
         this.updateGameDetails(1, this.bs.player1.name);
         this.createPlacementShips(this.bs.presetShips);
     }
 
+    startGame() {
+        document.querySelector('#enemy_gameboard').style.pointerEvents = 'auto';
+        document.querySelectorAll("#active_gameboard").forEach((div) => {
+            div.innerHTML = "";
+        })
+        this.createGameBoard(this.bs.mapSize, document.querySelector("#active_gameboard"), this.bs.player1, true);
+        document.querySelectorAll('.placement-ship').forEach((ship) => {ship.remove()});
+        document.querySelector("#random_starting_position").hidden = true;
+    }
+
     createPlacementShips(ships) {
         const container = document.querySelector('.ship-selection-container');
+        container.innerHTML = "";
         for (const ship of ships) {
             const shipElement = document.createElement('div');
             shipElement.classList.add("placement-ship");
             shipElement.draggable = true;
+            shipElement.id = ship.name;
+            shipElement.dataset.size = ship.size;
+            shipElement.addEventListener('dragstart', (ev) => {
+                ev.dataTransfer.setData("text/plain", ev.target.id);
+            });
             for (let i = 1; i <= ship.size; i++) {
                 const shipSectionContainer = document.createElement('div');
                 shipSectionContainer.className = "ship-section-container";
@@ -86,6 +107,34 @@ export class DomController {
     }
 
     createGameBoard(size, container, player, playerBoard) {
+        function setupAsDragTarger(element, domController) {
+            element.addEventListener("dragover", (ev) => {
+                ev.preventDefault();
+            });
+            element.addEventListener("drop", (ev) => {
+                const id = ev.dataTransfer.getData("text/plain");
+                const newShip = document.getElementById(id);
+                //don't place is already the drag object parent
+                if (newShip.parentElement === ev.currentTarget) {
+                    return
+                }
+                //Need to loop through all children to check no ship is already here
+
+
+                ev.preventDefault();
+                newShip.style.position = 'absolute'
+                newShip.style.zIndex = '1000'
+                ev.target.append(newShip);
+                //On place ship -> add ship to the actual map in this position. 
+                domController.bs.player1.gameboard.addShip(
+                    newShip.dataset.size, 
+                    newShip.id,
+                    parseInt(ev.currentTarget.dataset.x),
+                    parseInt(ev.currentTarget.dataset.y),
+                    0
+                );
+            });
+        }
         container.dataset.player = player.number
         container.style.gridTemplateColumns = `repeat(${this.bs.mapSize}, auto)`;
         container.style.gridTemplateRows = `repeat(${this.bs.mapSize}, auto)`;
@@ -96,6 +145,9 @@ export class DomController {
                 el.dataset.x = x;
                 el.dataset.y = y;
                 el.dataset.player = player.number
+                if(player.number === 1) {
+                    setupAsDragTarger(el, this);
+                }
                 const border = document.createElement('div');
                 border.className = 'border-element';
                 el.appendChild(border);
@@ -218,6 +270,7 @@ export class DomController {
         victoryElement.style.display = "none";
         //reactivate boards
         document.querySelector('#gameboards').style.pointerEvents = 'auto';
+         document.querySelector("#random_starting_position").hidden = false;
         //setup new game
         this.setupGame()
     }
