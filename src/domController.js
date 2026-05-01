@@ -219,6 +219,11 @@ export class DomController {
                 newShip.style.zIndex = "1000";
                 ev.target.append(newShip);
 
+                //ship placed at angle 180/270 have their placement point at the front of the ship so the angle for placement is reversed
+                let reverseShipAngle = false;
+                if (shipAngle === 180 || shipAngle === 270) {
+                    reverseShipAngle = true
+                }
 
                 //On place ship -> add ship to the actual map in this position.
                 domController.bs.player1.gameboard.addShip(
@@ -227,6 +232,7 @@ export class DomController {
                     targetX,
                     targetY,
                     shipAngle,
+                    reverseShipAngle //reverse the ship placement angle
                 );
             });
         }

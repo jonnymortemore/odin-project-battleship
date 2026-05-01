@@ -94,7 +94,7 @@ export class Gameboard {
         return this.gameboard[x][y].shipSection;
     }
 
-    addShip(size, name, x, y, angle) {
+    addShip(size, name, x, y, angle, reverseShipAngle = false) {
         //check if ship is already placed
         const createOrFindShip = (name, size, angle) => {
             //find current ship matching name and remove from ship array and from each coordinate
@@ -120,6 +120,16 @@ export class Gameboard {
         let extraX = 0;
         let extraY = 0;
 
+        //when drag/drop ship placed at these angles they are placed ship front first so angle of placement must be reversed
+        if (reverseShipAngle) {
+            if (angle === 180) {
+                angle = 0
+            }
+            if (angle === 270) {
+                angle = 90
+            }
+        }
+
         switch (angle) {
             case 0:
                 extraX = 1;
@@ -144,10 +154,18 @@ export class Gameboard {
             boardSquare.state = this.states.undetected;
             switch (i) {
                 case 0:
-                    boardSquare.shipSection = "back";
+                    if (reverseShipAngle) {
+                        boardSquare.shipSection = "front";
+                    } else {
+                        boardSquare.shipSection = "back";
+                    }
                     break;
                 case ship.size - 1: 
-                    boardSquare.shipSection = "front";
+                    if (reverseShipAngle) {
+                        boardSquare.shipSection = "back";
+                    } else {
+                        boardSquare.shipSection = "front";
+                    }
                     break;
                 default: 
                     boardSquare.shipSection = "middle";
