@@ -205,9 +205,14 @@ export class DomController {
 
                 //don't place is already the drag object parent
                 if (newShip.parentElement === ev.currentTarget) {
+                    console.log(ev.currentTarget)
                     return;
                 }
-                //Need to loop through all children to check no ship is already here
+                //check if there is already a ship in this position.
+                if (domController.bs.player1.gameboard.hasShip(targetX, targetY, id)) {
+                    console.log("alraedy a ship here")
+                    return;
+                }
 
                 //check if ship would be out of bounds on placement
                 if (!doesShipFit(targetX, targetY, shipAngle, shipSize, domController.bs.mapSize)) {
@@ -217,7 +222,7 @@ export class DomController {
                 ev.preventDefault();
                 newShip.style.position = "absolute";
                 newShip.style.zIndex = "1000";
-                ev.target.append(newShip);
+                ev.currentTarget.append(newShip);
 
                 //ship placed at angle 180/270 have their placement point at the front of the ship so the angle for placement is reversed
                 let reverseShipAngle = false;

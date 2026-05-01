@@ -77,11 +77,19 @@ export class Gameboard {
         return boardArray;
     }
 
-    hasShip(x, y) {
+    hasShip(x, y, name = null) {
         //used to setup gameboard - returns true if has ship
+        
         const boardSquare = this.gameboard[x][y];
+       
         if (boardSquare.ship !== null) {
-            return true;
+            if (name === null) {
+                return true;
+            } 
+            
+            if (boardSquare.ship.name !== name) {
+                return true;
+            }
         }
         return false;
     }
