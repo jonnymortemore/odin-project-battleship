@@ -226,7 +226,7 @@ body {
 .button-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   width: 80%;
   margin-top: 20px;
   border-top: 2px solid lightgray;
@@ -235,7 +235,7 @@ body {
 
 button {
   border-radius: 10px;
-  padding: 30px;
+  padding: 10px;
   background-color: lightgray;
   border: none;
   border-bottom: 5px solid darkgray;
@@ -270,5 +270,28 @@ button:active {
 
 .victory-container * {
   margin-bottom: 10px;
+}
+
+/* ship placement */
+
+.ship-section-container {
+  width: 60px;
+  height: 60px;
+  background-color: none;
+  position: relative;
+}
+
+.ship-selection-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 20px;
+  
+}
+
+.placement-ship {
+  display: flex;
+  flex-direction: row;
 }
 

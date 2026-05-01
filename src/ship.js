@@ -137,7 +137,7 @@ export class Gameboard {
         }
     }
 
-    setupShipStartingPositions(presetShips) {
+    randomizeShipStartingPositions(presetShips) {
         //setup random ship positions
         for (const shipDetails of presetShips) {
             const ship = new Ship(shipDetails.size, shipDetails.name);
@@ -259,8 +259,8 @@ export class Battleships {
         this.player1 = new Player(1, "You", this.mapSize, "player");
         this.player2 = new Player(2, "Computer", this.mapSize, "cpu");
 
-        this.player1.gameboard.setupShipStartingPositions(this.presetShips);
-        this.player2.gameboard.setupShipStartingPositions(this.presetShips);
+        //this.setupPlayerShips(this.player1);
+        this.setupPlayerShips(this.player2);
 
         this.activePlayer = this.player1;
         this.combatentPlayer = this.player2;
@@ -271,6 +271,10 @@ export class Battleships {
 
     addDomController(dom) {
         this.dom = dom;
+    }
+
+    setupPlayerShips(player) {
+        player.gameboard.randomizeShipStartingPositions(this.presetShips);
     }
 
     endTurn() {

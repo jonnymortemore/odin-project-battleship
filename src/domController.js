@@ -13,9 +13,18 @@ export class DomController {
 
     setupPageButtons() {
         //reset button 
-        const resetButton = document.querySelector("#reset_button")
+        const resetButton = document.querySelector("#reset_button");
         resetButton.onclick = () => {
             this.triggerGameReset()
+        }
+        const randomShipPositions = document.querySelector("#random_starting_position");
+        randomShipPositions.onclick = () => {
+            this.triggerGameReset();
+            document.querySelectorAll("#active_gameboard").forEach((div) => {
+                div.innerHTML = "";
+            })
+            this.bs.setupPlayerShips(this.bs.player1);
+            this.createGameBoard(this.bs.mapSize, document.querySelector("#active_gameboard"), this.bs.player1, true);
         }
 
     }
@@ -26,6 +35,35 @@ export class DomController {
         this.createGameBoard(this.bs.mapSize, document.querySelector("#active_gameboard"), this.bs.player1, true);
         this.createGameBoard(this.bs.mapSize, document.querySelector("#enemy_gameboard"), this.bs.player2, false);
         this.updateGameDetails(1, this.bs.player1.name);
+        this.createPlacementShips(this.bs.presetShips);
+    }
+
+    createPlacementShips(ships) {
+        const container = document.querySelector('.ship-selection-container');
+        for (const ship of ships) {
+            const shipElement = document.createElement('div');
+            shipElement.classList.add("placement-ship");
+            shipElement.draggable = true;
+            for (let i = 1; i <= ship.size; i++) {
+                const shipSectionContainer = document.createElement('div');
+                shipSectionContainer.className = "ship-section-container";
+                shipSectionContainer.style.backgroundColor = 'none';
+                const shipSection = document.createElement('div');
+                shipSection.classList.add('ship')
+                shipSection.classList.add('angle-0')
+                shipSection.classList.add('not-hit')
+                if (i == 1) {
+                    shipSection.classList.add("back")
+                } else if (i == ship.size) {
+                    shipSection.classList.add("front")
+                } else {
+                    shipSection.classList.add("middle")
+                }
+                shipSectionContainer.appendChild(shipSection)
+                shipElement.appendChild(shipSectionContainer)
+            }
+            container.appendChild(shipElement);
+        }
     }
 
     #createShipElements(el, player, x, y, immediateHit) {
