@@ -5,7 +5,7 @@ import "./styles.css" // all css files need to be imported into js
 
 import { DomController } from "../src/domController.js"
 
-new DomController().triggerGameEnd();
+new DomController();
 
 
 
