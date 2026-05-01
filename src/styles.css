@@ -286,11 +286,42 @@ button:active {
   justify-content: space-around;
   width: 100%;
   margin-top: 20px;
-  
 }
 
 .placement-ship {
   display: flex;
   flex-direction: row;
+}
+
+.placement-ship[data-angle="0"] > :first-child > * {
+  background-color: red;
+}
+
+.placement-ship[data-angle="0"] > :not(:first-child) > * {
+  background-color: grey;
+}
+
+.placement-ship[data-angle="90"] > :first-child > * {
+  background-color: red;
+}
+
+.placement-ship[data-angle="90"] > :not(:first-child) > * {
+  background-color: grey;
+}
+
+.placement-ship[data-angle="180"] > :last-child > * {
+  background-color: red;
+}
+
+.placement-ship[data-angle="180"] > :not(:last-child) > * {
+  background-color: grey;
+}
+
+.placement-ship[data-angle="270"] > :last-child > * {
+  background-color: red;
+}
+
+.placement-ship[data-angle="270"] > :not(:last-child) > * {
+  background-color: grey;
 }
 
