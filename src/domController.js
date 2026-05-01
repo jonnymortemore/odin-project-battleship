@@ -114,12 +114,20 @@ export class DomController {
             element.addEventListener("drop", (ev) => {
                 const id = ev.dataTransfer.getData("text/plain");
                 const newShip = document.getElementById(id);
+                const targetX = parseInt(ev.currentTarget.dataset.x);
+                const targetY = parseInt(ev.currentTarget.dataset.y);
+                const shipSize = parseInt(newShip.dataset.size);
+
                 //don't place is already the drag object parent
                 if (newShip.parentElement === ev.currentTarget) {
                     return
                 }
                 //Need to loop through all children to check no ship is already here
 
+                //check if ship would be out of bounds on placement
+                if (targetX + shipSize > domController.bs.mapSize || targetY + shipSize > domController.bs.mapSize) {
+                    return
+                }
 
                 ev.preventDefault();
                 newShip.style.position = 'absolute'
@@ -127,10 +135,10 @@ export class DomController {
                 ev.target.append(newShip);
                 //On place ship -> add ship to the actual map in this position. 
                 domController.bs.player1.gameboard.addShip(
-                    newShip.dataset.size, 
+                    shipSize, 
                     newShip.id,
-                    parseInt(ev.currentTarget.dataset.x),
-                    parseInt(ev.currentTarget.dataset.y),
+                    targetX,
+                    targetY,
                     0
                 );
             });

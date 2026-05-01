@@ -100,7 +100,6 @@ export class Gameboard {
             //find current ship matching name and remove from ship array and from each coordinate
             for (const currentShip of this.ships) {
                 if (currentShip.name === name) {
-                    console.log(currentShip)
                     for (const {x, y} of currentShip.coordinates) {
                         this.gameboard[x][y] = new BoardSquare()
                     }
