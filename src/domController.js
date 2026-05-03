@@ -87,7 +87,7 @@ export class DomController {
             shipAngle = 0;
         }
         //Check if ship fits -> if not return -> if yes then add to gameboard
-        if (shipElement.parentElement !== null) {
+        if (shipElement.closest('.grid-element')) {
             const gridSquare = shipElement.parentElement;
             console.log(gridSquare)
             const x = parseInt(gridSquare.dataset.x);
@@ -155,6 +155,12 @@ export class DomController {
             shipElement.dataset.angle = 0;
             shipElement.addEventListener("dragstart", (ev) => {
                 ev.dataTransfer.setData("text/plain", ev.target.id);
+                setTimeout(() => {
+                    ev.target.style.visibility = "hidden";
+                });
+            });
+            shipElement.addEventListener("dragend", (ev) => {
+                ev.target.style.visibility = "visible";
             });
             shipElement.addEventListener("dblclick", () => {
                 this.#rotatePlacementShip(ship.size, shipElement);
@@ -261,6 +267,8 @@ export class DomController {
         newShip.style.position = "absolute";
         newShip.style.zIndex = "1000";
         gridSquare.append(newShip);
+
+        
 
         //ship placed at angle 180/270 have their placement point at the front of the ship so the angle for placement is reversed
         let reverseShipAngle = false;
