@@ -102,6 +102,10 @@ export class DomController {
             if (shipAngle === 180 || shipAngle === 270) {
                 reverseShipAngle = true;
             }
+            //check if rotated ship will overlap other ships. 
+            if (this.#shipClashes(x, y, shipElement.id, size, shipAngle)) {
+                return;
+            }
             //On place ship -> add ship to the actual map in this position.
             this.bs.player1.gameboard.addShip(
                 size,
@@ -300,7 +304,7 @@ export class DomController {
             return;
         }
 
-         //check if there is any ship already in any of the overlapped grid squares
+        //check if there is any ship already in any of the overlapped grid squares
         if (this.#shipClashes(targetX, targetY, id, shipSize, shipAngle)) {
             return;
         }
