@@ -102,6 +102,19 @@ export class Gameboard {
         return this.gameboard[x][y].shipSection;
     }
 
+    removeShipFromGrid(name) {
+        for (const currentShip of this.ships) {
+            if (currentShip.name === name) {
+                for (const {x, y} of currentShip.coordinates) {
+                    this.gameboard[x][y] = new BoardSquare()
+                }
+                currentShip.coordinates.length = 0;
+                currentShip.angle = 0;
+                return currentShip
+            }
+        }
+    }
+
     addShip(size, name, x, y, angle, reverseShipAngle = false) {
         //check if ship is already placed
         const createOrFindShip = (name, size, angle) => {

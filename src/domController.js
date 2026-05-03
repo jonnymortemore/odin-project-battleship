@@ -290,7 +290,6 @@ export class DomController {
         gridSquare.classList.remove("dragover");
 
         const id = event.dataTransfer.getData("text/plain");
-        console.log(id)
         const newShip = document.getElementById(id);
 
         if (!this.#correctElementDropped(newShip, id)) {
@@ -302,10 +301,13 @@ export class DomController {
             return;
         }
 
+        //placed back into selection container
         if (gridSquare.className === 'ship-selection-container') {
             gridSquare.append(newShip);
             newShip.style.position = "static";
             newShip.style.zIndex = "auto";
+            //remove ship from gameboard
+            this.bs.player1.gameboard.removeShipFromGrid(id)
             return;
         }
 
