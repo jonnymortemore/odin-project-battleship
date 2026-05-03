@@ -112,6 +112,7 @@ export class Gameboard {
                         this.gameboard[x][y] = new BoardSquare()
                     }
                     currentShip.coordinates.length = 0;
+                    currentShip.angle = angle;
                     return currentShip
                 }
             }
