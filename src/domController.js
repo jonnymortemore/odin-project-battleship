@@ -87,19 +87,13 @@ export class DomController {
             shipAngle = 0;
         }
         //Check if ship fits -> if not return -> if yes then add to gameboard
-        if (shipElement.closest('.grid-element')) {
+        if (shipElement.closest(".grid-element")) {
             const gridSquare = shipElement.parentElement;
-            console.log(gridSquare)
+            console.log(gridSquare);
             const x = parseInt(gridSquare.dataset.x);
             const y = parseInt(gridSquare.dataset.y);
             if (
-                !this.#doesShipFitInGrid(
-                    x,
-                    y,
-                    shipAngle,
-                    size,
-                    this.bs.mapSize,
-                )
+                !this.#doesShipFitInGrid(x, y, shipAngle, size, this.bs.mapSize)
             ) {
                 return;
             }
@@ -233,44 +227,65 @@ export class DomController {
 
     #correctElementDropped(droppedElement, event, id) {
         if (id === "") {
-            return false
+            return false;
         }
         if (droppedElement === null) {
-            return false
+            return false;
         }
-        if (!droppedElement.classList.contains('placement-ship')) {
-            return false
+        if (!droppedElement.classList.contains("placement-ship")) {
+            return false;
         }
-        return true
+        return true;
+    }
+
+    #shipClashes(startingX, startingY, id, size, angle) {
+        //check each grid slot that a ship is overlapping to see if any contain another ship
+        let currentX = startingX;
+        let currentY = startingY;
+        for (let i = 0; i < size; i++) {
+            if (this.bs.player1.gameboard.hasShip(currentX, currentY, id)) {
+                console.log("already a ship here");
+                return true;
+            }
+
+            switch (angle) {
+                case 0:
+                    currentX += 1;
+                    continue;
+                case 90:
+                    currentY += 1;
+                    continue;
+                case 180:
+                    currentX -= 1;
+                    continue;
+                case 270:
+                    currentY -= 1;
+                    continue;
+            }
+        }
+
+        return false;
     }
 
     #onPlacementShipDrop(gridSquare, event) {
         gridSquare.classList.remove("dragover");
- 
-        
+
         const id = event.dataTransfer.getData("text/plain");
         const newShip = document.getElementById(id);
 
         if (!this.#correctElementDropped(newShip, event, id)) {
-            return
+            return;
         }
-       
-        
+
         const targetX = parseInt(gridSquare.dataset.x);
         const targetY = parseInt(gridSquare.dataset.y);
         const shipSize = parseInt(newShip.dataset.size);
         const shipAngle = parseInt(newShip.dataset.angle);
-        console.log(gridSquare)
+        console.log(gridSquare);
         //don't place is already the drag object parent
         if (newShip.parentElement === gridSquare) {
             return;
         }
-        //check if there is already a ship in this position.
-        if (this.bs.player1.gameboard.hasShip(targetX, targetY, id)) {
-            console.log("alraedy a ship here");
-            return;
-        }
-
         //check if ship would be out of bounds on placement
         if (
             !this.#doesShipFitInGrid(
@@ -285,12 +300,15 @@ export class DomController {
             return;
         }
 
+         //check if there is any ship already in any of the overlapped grid squares
+        if (this.#shipClashes(targetX, targetY, id, shipSize, shipAngle)) {
+            return;
+        }
+
         event.preventDefault();
         newShip.style.position = "absolute";
         newShip.style.zIndex = "1000";
         gridSquare.append(newShip);
-
-        
 
         //ship placed at angle 180/270 have their placement point at the front of the ship so the angle for placement is reversed
         let reverseShipAngle = false;
@@ -321,7 +339,7 @@ export class DomController {
                 const id = event.dataTransfer.getData("text/plain");
                 const dragElement = document.getElementById(id);
                 if (!this.#correctElementDropped(dragElement, ev, id)) {
-                    return
+                    return;
                 }
                 ev.currentTarget.classList.add("dragover");
             });
