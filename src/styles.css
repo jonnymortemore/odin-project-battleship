@@ -82,8 +82,16 @@ body {
 .grid-element {
   width: 60px;
   height: 60px;
-  background-color: lightblue;
+  
   position: relative;
+}
+
+.grid-element:not(.dragover) {
+  background-color: lightblue;
+}
+
+.grid-element.dragover {
+  background-color: rgb(31, 171, 218);
 }
 
 .border-element {

@@ -231,9 +231,31 @@ export class DomController {
         return true;
     }
 
+    #correctElementDropped(droppedElement, event, id) {
+        if (id === "") {
+            return false
+        }
+        if (droppedElement === null) {
+            return false
+        }
+        if (!droppedElement.classList.contains('placement-ship')) {
+            return false
+        }
+        return true
+    }
+
     #onPlacementShipDrop(gridSquare, event) {
+        gridSquare.classList.remove("dragover");
+ 
+        
         const id = event.dataTransfer.getData("text/plain");
         const newShip = document.getElementById(id);
+
+        if (!this.#correctElementDropped(newShip, event, id)) {
+            return
+        }
+       
+        
         const targetX = parseInt(gridSquare.dataset.x);
         const targetY = parseInt(gridSquare.dataset.y);
         const shipSize = parseInt(newShip.dataset.size);
@@ -294,6 +316,17 @@ export class DomController {
             });
             element.addEventListener("drop", (ev) => {
                 this.#onPlacementShipDrop(ev.currentTarget, ev);
+            });
+            element.addEventListener("dragover", (ev) => {
+                const id = event.dataTransfer.getData("text/plain");
+                const dragElement = document.getElementById(id);
+                if (!this.#correctElementDropped(dragElement, ev, id)) {
+                    return
+                }
+                ev.currentTarget.classList.add("dragover");
+            });
+            element.addEventListener("dragleave", (ev) => {
+                ev.currentTarget.classList.remove("dragover");
             });
         };
         container.dataset.player = player.number;
