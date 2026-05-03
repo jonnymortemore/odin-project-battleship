@@ -232,7 +232,7 @@ export class DomController {
         const targetY = parseInt(gridSquare.dataset.y);
         const shipSize = parseInt(newShip.dataset.size);
         const shipAngle = parseInt(newShip.dataset.angle);
-
+        console.log(gridSquare)
         //don't place is already the drag object parent
         if (newShip.parentElement === gridSquare) {
             return;
@@ -285,7 +285,7 @@ export class DomController {
                 ev.preventDefault();
             });
             element.addEventListener("drop", (ev) => {
-                this.#onPlacementShipDrop(ev.target, ev);
+                this.#onPlacementShipDrop(ev.currentTarget, ev);
             });
         };
         container.dataset.player = player.number;
