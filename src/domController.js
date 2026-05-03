@@ -75,6 +75,7 @@ export class DomController {
             ship.remove();
         });
         document.querySelector("#random_starting_position").hidden = true;
+        document.querySelector(".ship-selection-container").style.display = "none";
     }
 
     #rotatePlacementShip(size, shipElement) {
@@ -144,6 +145,20 @@ export class DomController {
     createPlacementShips(ships) {
         const container = document.querySelector(".ship-selection-container");
         container.innerHTML = "";
+        container.addEventListener("drop", (ev) => {
+            this.#onPlacementShipDrop(ev.currentTarget, ev);
+        });
+        container.addEventListener("dragover", (ev) => {
+            ev.preventDefault();
+            ev.currentTarget.classList.add("dragover");
+        });
+        container.addEventListener("dragleave", (ev) => {
+            ev.currentTarget.classList.remove("dragover");
+        });
+
+
+
+
         for (const ship of ships) {
             const shipElement = document.createElement("div");
             shipElement.classList.add("placement-ship");
@@ -152,7 +167,7 @@ export class DomController {
             shipElement.dataset.size = ship.size;
             shipElement.dataset.angle = 0;
             shipElement.addEventListener("dragstart", (ev) => {
-                ev.dataTransfer.setData("text/plain", ev.target.id);
+                ev.dataTransfer.setData("text/plain", ev.currentTarget.id);
                 setTimeout(() => {
                     ev.target.style.visibility = "hidden";
                 });
@@ -229,7 +244,7 @@ export class DomController {
         return true;
     }
 
-    #correctElementDropped(droppedElement, event, id) {
+    #correctElementDropped(droppedElement, id) {
         if (id === "") {
             return false;
         }
@@ -275,9 +290,22 @@ export class DomController {
         gridSquare.classList.remove("dragover");
 
         const id = event.dataTransfer.getData("text/plain");
+        console.log(id)
         const newShip = document.getElementById(id);
 
-        if (!this.#correctElementDropped(newShip, event, id)) {
+        if (!this.#correctElementDropped(newShip, id)) {
+            return;
+        }
+
+        //return ship to selection area
+        if (newShip.parentElement === gridSquare) {
+            return;
+        }
+
+        if (gridSquare.className === 'ship-selection-container') {
+            gridSquare.append(newShip);
+            newShip.style.position = "static";
+            newShip.style.zIndex = "auto";
             return;
         }
 
@@ -285,11 +313,8 @@ export class DomController {
         const targetY = parseInt(gridSquare.dataset.y);
         const shipSize = parseInt(newShip.dataset.size);
         const shipAngle = parseInt(newShip.dataset.angle);
-        console.log(gridSquare);
         //don't place is already the drag object parent
-        if (newShip.parentElement === gridSquare) {
-            return;
-        }
+        
         //check if ship would be out of bounds on placement
         if (
             !this.#doesShipFitInGrid(
@@ -333,19 +358,12 @@ export class DomController {
 
     createGameBoard(size, container, player, playerBoard) {
         const setupAsDragTarget = (element) => {
-            element.addEventListener("dragover", (ev) => {
-                ev.preventDefault();
-            });
             element.addEventListener("drop", (ev) => {
                 this.#onPlacementShipDrop(ev.currentTarget, ev);
             });
-            element.addEventListener("dragover", (ev) => {
-                const id = event.dataTransfer.getData("text/plain");
-                const dragElement = document.getElementById(id);
-                if (!this.#correctElementDropped(dragElement, ev, id)) {
-                    return;
-                }
-                ev.currentTarget.classList.add("dragover");
+            element.addEventListener("dragover", (event) => {
+                event.preventDefault();
+                event.currentTarget.classList.add("dragover");
             });
             element.addEventListener("dragleave", (ev) => {
                 ev.currentTarget.classList.remove("dragover");
@@ -362,7 +380,7 @@ export class DomController {
                 el.dataset.y = y;
                 el.dataset.player = player.number;
                 if (player.number === 1) {
-                    setupAsDragTarget(el, this);
+                    setupAsDragTarget(el);
                 }
                 const border = document.createElement("div");
                 border.className = "border-element";
@@ -491,6 +509,7 @@ export class DomController {
         //reactivate boards
         document.querySelector("#gameboards").style.pointerEvents = "auto";
         document.querySelector("#random_starting_position").hidden = false;
+        document.querySelector(".ship-selection-container").style.display = "flex";
         //setup new game
         this.setupGame();
     }

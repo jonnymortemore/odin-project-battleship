@@ -292,9 +292,16 @@ button:active {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  width: 100%;
+  width: 80%;
   margin-top: 20px;
+  padding: 20px;
+  min-height: 80px;
 }
+
+.ship-selection-container.dragover {
+  background-color: lightgrey;
+}
+
 
 .placement-ship {
   display: flex;
