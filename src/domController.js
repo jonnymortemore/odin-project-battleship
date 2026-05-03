@@ -77,45 +77,54 @@ export class DomController {
         document.querySelector("#random_starting_position").hidden = true;
     }
 
-    #rotatePlacementShip(ship, shipElement) {
-         //get current ship angle
-        let oldShipAngle = parseInt(ship.dataset.angle);
+    #rotatePlacementShip(size, shipElement) {
+        //get current ship angle
+        let oldShipAngle = parseInt(shipElement.dataset.angle);
         //find new ship angle
-        let shipAngle = oldShipAngle +  90;
+        let shipAngle = oldShipAngle + 90;
         // reset to 0
         if (shipAngle === 360) {
             shipAngle = 0;
         }
         //Check if ship fits -> if not return -> if yes then add to gameboard
-        if (ship.parentElement !== null) {
-            const gridSquare = ship.parentElement
+        if (shipElement.parentElement !== null) {
+            const gridSquare = shipElement.parentElement;
+            console.log(gridSquare)
             const x = parseInt(gridSquare.dataset.x);
             const y = parseInt(gridSquare.dataset.y);
-            if(!this.#doesShipFitInGrid(x, y, shipAngle, ship.size, this.bs.mapSize)) {
-                return
-            } 
+            if (
+                !this.#doesShipFitInGrid(
+                    x,
+                    y,
+                    shipAngle,
+                    size,
+                    this.bs.mapSize,
+                )
+            ) {
+                return;
+            }
             //ship placed at angle 180/270 have their placement point at the front of the ship so the angle for placement is reversed
             let reverseShipAngle = false;
             if (shipAngle === 180 || shipAngle === 270) {
-                reverseShipAngle = true
+                reverseShipAngle = true;
             }
             //On place ship -> add ship to the actual map in this position.
             this.bs.player1.gameboard.addShip(
-                ship.size,
-                ship.id,
+                size,
+                shipElement.id,
                 x,
                 y,
                 shipAngle,
-                reverseShipAngle
+                reverseShipAngle,
             );
         }
 
         //for each child -> set new angle class
-        shipElement.querySelectorAll('.ship').forEach((shipSection) => {
+        shipElement.querySelectorAll(".ship").forEach((shipSection) => {
             shipSection.classList.remove(`angle-${oldShipAngle}`);
             shipSection.classList.add(`angle-${shipAngle}`);
         });
-            
+
         //save new angle to ship
         shipElement.dataset.angle = shipAngle;
         //set flex direction based on angle
@@ -147,10 +156,9 @@ export class DomController {
             shipElement.addEventListener("dragstart", (ev) => {
                 ev.dataTransfer.setData("text/plain", ev.target.id);
             });
-            shipElement.addEventListener("dblclick", (ev) => {
-                const ship = ev.currentTarget;
-                this.#rotatePlacementShip(ship, shipElement);
-            }); 
+            shipElement.addEventListener("dblclick", () => {
+                this.#rotatePlacementShip(ship.size, shipElement);
+            });
             for (let i = 1; i <= ship.size; i++) {
                 const shipSectionContainer = document.createElement("div");
                 shipSectionContainer.className = "ship-section-container";
@@ -159,7 +167,7 @@ export class DomController {
                 shipSection.classList.add("ship");
                 shipSection.classList.add("angle-0");
                 if (i == 1) {
-                    shipSection.classList.add('back');
+                    shipSection.classList.add("back");
                 } else if (i == ship.size) {
                     shipSection.classList.add("front");
                 } else {
@@ -195,26 +203,26 @@ export class DomController {
         switch (angle) {
             case 0:
                 if (x + shipSize > maxSize) {
-                    return false
+                    return false;
                 }
                 break;
-            case 180: 
+            case 180:
                 if (x + shipSize > maxSize) {
-                    return false
+                    return false;
                 }
                 break;
             case 90:
                 if (y + shipSize > maxSize) {
-                    return false
+                    return false;
                 }
                 break;
             case 270:
                 if (y + shipSize > maxSize) {
-                    return false
+                    return false;
                 }
                 break;
         }
-        return true
+        return true;
     }
 
     #onPlacementShipDrop(gridSquare, event) {
@@ -231,14 +239,22 @@ export class DomController {
         }
         //check if there is already a ship in this position.
         if (this.bs.player1.gameboard.hasShip(targetX, targetY, id)) {
-            console.log("alraedy a ship here")
+            console.log("alraedy a ship here");
             return;
         }
 
         //check if ship would be out of bounds on placement
-        if (!this.#doesShipFitInGrid(targetX, targetY, shipAngle, shipSize, this.bs.mapSize)) {
-            console.log("ship doesn't fit")
-            return
+        if (
+            !this.#doesShipFitInGrid(
+                targetX,
+                targetY,
+                shipAngle,
+                shipSize,
+                this.bs.mapSize,
+            )
+        ) {
+            console.log("ship doesn't fit");
+            return;
         }
 
         event.preventDefault();
@@ -249,7 +265,7 @@ export class DomController {
         //ship placed at angle 180/270 have their placement point at the front of the ship so the angle for placement is reversed
         let reverseShipAngle = false;
         if (shipAngle === 180 || shipAngle === 270) {
-            reverseShipAngle = true
+            reverseShipAngle = true;
         }
 
         //On place ship -> add ship to the actual map in this position.
@@ -259,9 +275,8 @@ export class DomController {
             targetX,
             targetY,
             shipAngle,
-            reverseShipAngle //reverse the ship placement angle
+            reverseShipAngle, //reverse the ship placement angle
         );
-
     }
 
     createGameBoard(size, container, player, playerBoard) {
@@ -272,7 +287,7 @@ export class DomController {
             element.addEventListener("drop", (ev) => {
                 this.#onPlacementShipDrop(ev.target, ev);
             });
-        }
+        };
         container.dataset.player = player.number;
         container.style.gridTemplateColumns = `repeat(${this.bs.mapSize}, auto)`;
         container.style.gridTemplateRows = `repeat(${this.bs.mapSize}, auto)`;
